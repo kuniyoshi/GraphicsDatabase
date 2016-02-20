@@ -1,7 +1,7 @@
 #include "GraphicsDatabase/VertexBuffer.h"
 #include <cassert>
 #include <vector>
-#include "Vector3.h"
+#include "GraphicsDatabase/Vector3.h"
 
 namespace GraphicsDatabase
 {
@@ -9,7 +9,7 @@ namespace GraphicsDatabase
 VertexBuffer::VertexBuffer() : vertexes_(0), vertexes_size_(0) {}
 
 VertexBuffer::VertexBuffer(const std::vector< double >& vertexes)
-: vertexes(0), vertexes_size_(0)
+: vertexes_(0), vertexes_size_(0)
 {
     set_vertexes(vertexes);
 }
@@ -55,11 +55,9 @@ void VertexBuffer::set_vertexes(const std::vector< double >& vertexes)
     vertexes_size_ = vertexes.size();
     vertexes_ = new Vector3[vertexes_size_];
 
-    std::vector< double >::iterator it = vertexes.begin();
-
-    for (; it != vertexes.end(); it += 3)
+    for (size_t i = 0; i < vertexes.size(); ++i)
     {
-        vertexes_[it].set_xyz(vertexes[it], vertexes[it + 1], vertexes[it + 2]);
+        vertexes_[i].set(vertexes[i], vertexes[i + 1], vertexes[i + 2]);
     }
 }
 

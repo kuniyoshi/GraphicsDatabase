@@ -1,5 +1,7 @@
 #include "GraphicsDatabase/IndexBuffer.h"
+#include <cassert>
 #include <vector>
+#include "GraphicsDatabase/Vector2.h"
 
 namespace GraphicsDatabase
 {
@@ -10,24 +12,20 @@ IndexBuffer::IndexBuffer(   const std::vector< int >& indexes,
 {
     assert((indexes.size() % 3) == 0);
     assert((uvs.size() % 6) == 0);
-    assert(indexes.size() == uvs.size());
+    assert(2 * indexes.size() == uvs.size());
 
     indexes_size_ = indexes.size();
     indexes_ = new int[indexes_size_];
-    uvs_ = new double[indexes_size_];
+    uvs_ = new Vector2[indexes_size_];
 
-    std::vector< int >::const_iterator iterator = indexes.begin();
-
-    for (; iterator != indexes.end(); ++iterator)
+    for (size_t i = 0; i < indexes_size_; ++i)
     {
-        indexes_[iterator] = *iterator;
+        indexes_[i] = indexes[i];
     }
 
-    std::vector< double >::const_iterator uvs_iterator = uvs.begin();
-
-    for (; uvs_iterator != uvs.end(); ++uvs_iterator)
+    for (size_t i = 0; i < uvs.size(); i += 2)
     {
-        uvs_[uvs_iterator] = *uvs_iterator;
+        uvs_[i].set(uvs[i], uvs[i + 1]);
     }
 }
 
@@ -39,8 +37,8 @@ IndexBuffer::~IndexBuffer()
 
 size_t IndexBuffer::at(size_t index) const { return indexes_[index]; }
 
-Vector2* IndexBuffer::uv_at(size_t index) const { return uvs_[index]; }
+Vector2* IndexBuffer::uv_at(size_t index) const { return &uvs_[index]; }
 
-size_t IndexBuffer::size() const { return }
+size_t IndexBuffer::size() const { return indexes_size_; }
 
 } // namespace GraphicsDatabase

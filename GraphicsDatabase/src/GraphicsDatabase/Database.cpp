@@ -6,11 +6,11 @@
 #include <vector>
 #include "PseudoJson/Decoder.h"
 #include "PseudoJson/Data.h"
+#include "GameLib/Framework.h"
 #include "GraphicsDatabase/Batch.h"
 #include "GraphicsDatabase/IndexBuffer.h"
 #include "GraphicsDatabase/Model.h"
 #include "GraphicsDatabase/VertexBuffer.h"
-#include "GraphicsDatabase/Texture.h"
 
 namespace GraphicsDatabase
 {
@@ -18,7 +18,7 @@ namespace GraphicsDatabase
 Database::Database(const char* filename)
 : batch_(), model_()
 {
-    GameLib::Framework f = GameLib::Framework::instance();
+    GameLib::Framework f = ::GameLib::Framework::instance();
     PseudoJson::Decoder decoder(filename);
     decoder.decode();
     const PseudoJson::Data data(decoder.data());
@@ -42,13 +42,13 @@ Database::Database(const char* filename)
         std::string image_name = data.get_at(oss.str());
 
         GameLib::Texture* texture;
-        f.createTexture(&texture);
+        f.createTexture(&texture, image_name.c_str());
 
         oss.str(base_key);
         oss << ".vertexes";
 
         std::vector< double > vertexes;
-        data.copy_expanded_to_vector(&vertexes, oss.str());
+        data.copy_expanded_to_vector_at(&vertexes, oss.str());
 
         VertexBuffer* vertex_buffer = new VertexBuffer(vertexes);
         typedef std::pair< const char*, VertexBuffer* > IdVertexBuffer;
@@ -58,13 +58,13 @@ Database::Database(const char* filename)
         oss << ".indexes";
 
         std::vector< int > indexes;
-        data.copy_expanded_to_vector(&indexes, oss.str());
+        data.copy_expanded_to_vector_at(&indexes, oss.str());
 
         oss.str(base_key);
         oss << ".uvs";
 
         std::vector< double > uvs;
-        data.copy_2expanded_to_vector(&uvs, oss.str());
+        data.copy_2expanded_to_vector_at(&uvs, oss.str());
 
         IndexBuffer* index_buffer = new IndexBuffer(indexes, uvs);
         typedef std::pair< const char*, IndexBuffer* > IdIndexBuffer;

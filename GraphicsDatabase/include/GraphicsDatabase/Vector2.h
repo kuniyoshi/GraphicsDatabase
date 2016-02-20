@@ -7,10 +7,13 @@ namespace GraphicsDatabase
 class Vector2
 {
 public:
-    double u, double v;
+    double u, v;
 
 public:
+    Vector2();
     Vector2(double new_u, double new_v);
+    void copy_from(const Vector2& base);
+    void set(double new_u, double new_v);
     // ~Vector2();
 };
 

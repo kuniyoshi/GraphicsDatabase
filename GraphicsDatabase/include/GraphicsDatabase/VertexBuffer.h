@@ -2,10 +2,10 @@
 #define GRAPHICS_DATABASE__VERTEX_BUFFER_H_
 #include <vector>
 
-class Vector3;
-
 namespace GraphicsDatabase
 {
+
+class Vector3;
 
 class VertexBuffer
 {

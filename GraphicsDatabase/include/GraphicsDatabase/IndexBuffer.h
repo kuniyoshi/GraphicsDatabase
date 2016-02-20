@@ -11,7 +11,7 @@ class IndexBuffer
 {
 private:
     int* indexes_;
-    double* uvs_;
+    Vector2* uvs_;
     size_t indexes_size_;
 
 public:

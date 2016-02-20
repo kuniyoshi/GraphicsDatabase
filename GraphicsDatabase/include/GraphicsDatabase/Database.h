@@ -22,7 +22,7 @@ public:
     Database(const char* filename);
     ~Database();
     void create(const char* model_id, const char* batch_id);
-    Model* find(const char* model_id);
+    Model* find(const char* model_id) const;
 };
 
 } // namespace GraphicsDatabase

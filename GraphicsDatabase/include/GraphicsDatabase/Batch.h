@@ -2,10 +2,11 @@
 #define GRAPHICS_DATABASE__BATCH_H_
 #include "GraphicsDatabase/VertexBuffer.h"
 
+namespace GameLib { class Texture; }
+
 namespace GraphicsDatabase
 {
 
-namespace GameLib { class Texture; }
 class Camera;
 class IndexBuffer;
 class Matrix44;
