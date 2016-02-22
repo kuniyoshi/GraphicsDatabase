@@ -55,7 +55,7 @@ void VertexBuffer::set_vertexes(const std::vector< double >& vertexes)
     vertexes_size_ = vertexes.size();
     vertexes_ = new Vector3[vertexes_size_];
 
-    for (size_t i = 0; i < vertexes.size(); ++i)
+    for (size_t i = 0; i < vertexes.size(); i = i + 3)
     {
         vertexes_[i].set(vertexes[i], vertexes[i + 1], vertexes[i + 2]);
     }
