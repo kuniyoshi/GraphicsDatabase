@@ -32,10 +32,9 @@ Database::Database(const char* filename)
         oss.str("");
         oss << "models." << i;
         const std::string base_key = oss.str();
+        const std::string id = data.get_at(base_key + ".id");
 
-        std::string id = data.get_at(base_key + ".id");
-
-        std::string image_name = data.get_at(base_key + ".image");
+        const std::string image_name = data.get_at(base_key + ".image");
 
         GameLib::Texture* texture = 0;
         f.createTexture(&texture, image_name.c_str());
