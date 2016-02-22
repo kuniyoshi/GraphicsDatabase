@@ -43,8 +43,8 @@ Database::Database(const char* filename)
         data.copy_expanded_to_vector_at(&vertexes, base_key + ".vertexes");
 
         VertexBuffer* vertex_buffer = new VertexBuffer(vertexes);
-        typedef std::pair< const char*, VertexBuffer* > IdVertexBuffer;
-        vertex_buffer_.insert(IdVertexBuffer(id.c_str(), vertex_buffer));
+        typedef std::pair< const std::string, VertexBuffer* > IdVertexBuffer;
+        vertex_buffer_.insert(IdVertexBuffer(id, vertex_buffer));
 
         std::vector< int > indexes;
         data.copy_expanded_to_vector_at(&indexes, base_key + ".indexes");
@@ -53,25 +53,26 @@ Database::Database(const char* filename)
         data.copy_2expanded_to_vector_at(&uvs, base_key + ".uvs");
 
         IndexBuffer* index_buffer = new IndexBuffer(indexes, uvs);
-        typedef std::pair< const char*, IndexBuffer* > IdIndexBuffer;
-        index_buffer_.insert(IdIndexBuffer(id.c_str(), index_buffer));
+        typedef std::pair< const std::string, IndexBuffer* > IdIndexBuffer;
+        index_buffer_.insert(IdIndexBuffer(id, index_buffer));
 
         Batch* batch = new Batch(vertex_buffer, index_buffer, texture);
-        typedef std::pair< const char*, Batch* > IdBatch;
-        batch_.insert(IdBatch(id.c_str(), batch));
+        typedef std::pair< const std::string, Batch* > IdBatch;
+        batch_.insert(IdBatch(id, batch));
     }
 }
 
 Database::~Database()
 {
-    std::map< const char*, Model* >::iterator model_iterator = model_.begin();
+    std::map< const std::string, Model* >::iterator model_iterator
+    = model_.begin();
 
     for (; model_iterator != model_.end(); ++model_iterator)
     {
         delete model_iterator->second;
     }
 
-    std::map< const char*, Batch* >::iterator batch_iterator
+    std::map< const std::string, Batch* >::iterator batch_iterator
     = batch_.begin();
 
     for (; batch_iterator != batch_.end(); ++batch_iterator)
@@ -79,7 +80,7 @@ Database::~Database()
         delete batch_iterator->second;
     }
 
-    std::map< const char*, IndexBuffer* >::iterator ib_it
+    std::map< const std::string, IndexBuffer* >::iterator ib_it
     = index_buffer_.begin();
 
     for (; ib_it != index_buffer_.end(); ++ib_it)
@@ -87,7 +88,7 @@ Database::~Database()
         delete ib_it->second;
     }
 
-    std::map< const char*, VertexBuffer* >::iterator vb_it
+    std::map< const std::string, VertexBuffer* >::iterator vb_it
     = vertex_buffer_.begin();
 
     for (; vb_it != vertex_buffer_.end(); ++vb_it)
@@ -97,7 +98,7 @@ Database::~Database()
 
     GameLib::Framework f = GameLib::Framework::instance();
 
-    std::map< const char*, GameLib::Texture* >::iterator tx_it
+    std::map< const std::string, GameLib::Texture* >::iterator tx_it
     = texture_.begin();
 
     for (; tx_it != texture_.end(); ++tx_it)
@@ -106,19 +107,19 @@ Database::~Database()
     }
 }
 
-void Database::create(const char* model_id, const char* batch_id)
+void Database::create(const std::string& model_id, const std::string& batch_id)
 {
     Batch* batch = batch_.at(batch_id);
 
-    std::map< const char*, Model* >::iterator model_iterator
+    std::map< const std::string, Model* >::iterator model_iterator
     = model_.find(model_id);
     assert(model_iterator == model_.end());
 
     Model* model = new Model(batch);
-    model_.insert(std::pair< const char*, Model* >(model_id, model));
+    model_.insert(std::pair< const std::string, Model* >(model_id, model));
 }
 
-Model* Database::find(const char* model_id) const
+Model* Database::find(const std::string& model_id) const
 {
     return model_.at(model_id);
 }

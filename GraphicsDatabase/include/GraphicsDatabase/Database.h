@@ -15,17 +15,17 @@ class VertexBuffer;
 class Database
 {
 private:
-    std::map< const char*, VertexBuffer* > vertex_buffer_;
-    std::map< const char*, IndexBuffer* > index_buffer_;
-    std::map< const char*, Batch* > batch_;
-    std::map< const char*, Model* > model_;
-    std::map< const char*, GameLib::Texture* > texture_;
+    std::map< const std::string, VertexBuffer* > vertex_buffer_;
+    std::map< const std::string, IndexBuffer* > index_buffer_;
+    std::map< const std::string, Batch* > batch_;
+    std::map< const std::string, Model* > model_;
+    std::map< const std::string, GameLib::Texture* > texture_;
 
 public:
     Database(const char* filename);
     ~Database();
-    void create(const char* model_id, const char* batch_id);
-    Model* find(const char* model_id) const;
+    void create(const std::string& model_id, const std::string& batch_id);
+    Model* find(const std::string& model_id) const;
 };
 
 } // namespace GraphicsDatabase
