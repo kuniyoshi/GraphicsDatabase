@@ -1,4 +1,5 @@
 #include "GraphicsDatabase/Model.h"
+#include "GraphicsDatabase/Batch.h"
 
 namespace GraphicsDatabase
 {
