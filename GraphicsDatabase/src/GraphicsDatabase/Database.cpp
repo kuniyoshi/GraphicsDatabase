@@ -29,38 +29,29 @@ Database::Database(const char* filename)
 
     for (size_t i = 0; i < model_size; ++i)
     {
-        oss.str("models.");
-        oss << i;
-
+        oss.str("");
+        oss << "models." << i;
         const std::string base_key = oss.str();
 
-        oss.str(base_key + ".id");
-        std::string id = data.get_at(oss.str());
+        std::string id = data.get_at(base_key + ".id");
 
-        oss.str(base_key + ".image");
-        std::string image_name = data.get_at(oss.str());
+        std::string image_name = data.get_at(base_key + ".image");
 
         GameLib::Texture* texture;
         f.createTexture(&texture, image_name.c_str());
 
-        oss.str(base_key + ".vertexes");
-
         std::vector< double > vertexes;
-        data.copy_expanded_to_vector_at(&vertexes, oss.str());
+        data.copy_expanded_to_vector_at(&vertexes, base_key + ".vertexes");
 
         VertexBuffer* vertex_buffer = new VertexBuffer(vertexes);
         typedef std::pair< const char*, VertexBuffer* > IdVertexBuffer;
         vertex_buffer_.insert(IdVertexBuffer(id.c_str(), vertex_buffer));
 
-        oss.str(base_key + ".indexes");
-
         std::vector< int > indexes;
-        data.copy_expanded_to_vector_at(&indexes, oss.str());
-
-        oss.str(base_key + ".uvs");
+        data.copy_expanded_to_vector_at(&indexes, base_key + ".indexes");
 
         std::vector< double > uvs;
-        data.copy_2expanded_to_vector_at(&uvs, oss.str());
+        data.copy_2expanded_to_vector_at(&uvs, base_key + ".uvs");
 
         IndexBuffer* index_buffer = new IndexBuffer(indexes, uvs);
         typedef std::pair< const char*, IndexBuffer* > IdIndexBuffer;
