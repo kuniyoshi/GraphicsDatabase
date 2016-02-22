@@ -39,6 +39,9 @@ Database::Database(const char* filename)
         GameLib::Texture* texture = 0;
         f.createTexture(&texture, image_name.c_str());
 
+        typedef std::pair< const std::string, GameLib::Texture* > IdTexture;
+        texture_.insert(IdTexture(id, texture));
+
         std::vector< double > vertexes;
         data.copy_expanded_to_vector_at(&vertexes, base_key + ".vertexes");
 
@@ -69,7 +72,7 @@ Database::~Database()
 
     for (; model_iterator != model_.end(); ++model_iterator)
     {
-        delete model_iterator->second;
+        SAFE_DELETE(model_iterator->second);
     }
 
     std::map< const std::string, Batch* >::iterator batch_iterator
@@ -77,7 +80,7 @@ Database::~Database()
 
     for (; batch_iterator != batch_.end(); ++batch_iterator)
     {
-        delete batch_iterator->second;
+        SAFE_DELETE(batch_iterator->second);
     }
 
     std::map< const std::string, IndexBuffer* >::iterator ib_it
@@ -85,7 +88,7 @@ Database::~Database()
 
     for (; ib_it != index_buffer_.end(); ++ib_it)
     {
-        delete ib_it->second;
+        SAFE_DELETE(ib_it->second);
     }
 
     std::map< const std::string, VertexBuffer* >::iterator vb_it
@@ -93,7 +96,7 @@ Database::~Database()
 
     for (; vb_it != vertex_buffer_.end(); ++vb_it)
     {
-        delete vb_it->second;
+        SAFE_DELETE(vb_it->second);
     }
 
     GameLib::Framework f = GameLib::Framework::instance();
