@@ -175,6 +175,7 @@
     <ClCompile Include="src\GraphicsDatabase\Drawer.cpp" />
     <ClCompile Include="src\GraphicsDatabase\IndexBuffer.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Matrix44.cpp" />
+    <ClCompile Include="src\GraphicsDatabase\Model.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Vector2.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Vector3.cpp" />
     <ClCompile Include="src\GraphicsDatabase\VertexBuffer.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="include\GraphicsDatabase\Drawer.h" />
     <ClInclude Include="include\GraphicsDatabase\IndexBuffer.h" />
     <ClInclude Include="include\GraphicsDatabase\Matrix44.h" />
+    <ClInclude Include="include\GraphicsDatabase\Model.h" />
     <ClInclude Include="include\GraphicsDatabase\Vector2.h" />
     <ClInclude Include="include\GraphicsDatabase\Vector3.h" />
     <ClInclude Include="include\GraphicsDatabase\VertexBuffer.h" />
