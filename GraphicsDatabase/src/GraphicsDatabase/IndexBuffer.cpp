@@ -25,7 +25,7 @@ IndexBuffer::IndexBuffer(   const std::vector< int >& indexes,
 
     for (size_t i = 0; i < uvs.size(); i += 2)
     {
-        uvs_[i].set(uvs[i], uvs[i + 1]);
+        uvs_[i / 2].set(uvs[i], uvs[i + 1]);
     }
 }
 
