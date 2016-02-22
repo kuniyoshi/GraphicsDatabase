@@ -2,6 +2,8 @@
 #define GRAPHICS_DATABASE__DATABASE_H_
 #include <map>
 
+namespace GameLib { class Texture; }
+
 namespace GraphicsDatabase
 {
 
@@ -17,6 +19,7 @@ private:
     std::map< const char*, IndexBuffer* > index_buffer_;
     std::map< const char*, Batch* > batch_;
     std::map< const char*, Model* > model_;
+    std::map< const char*, GameLib::Texture* > texture_;
 
 public:
     Database(const char* filename);

@@ -95,6 +95,16 @@ Database::~Database()
     {
         delete vb_it->second;
     }
+
+    GameLib::Framework f = GameLib::Framework::instance();
+
+    std::map< const char*, GameLib::Texture* >::iterator tx_it
+    = texture_.begin();
+
+    for (; tx_it != texture_.end(); ++tx_it)
+    {
+        f.destroyTexture(&(tx_it->second));
+    }
 }
 
 void Database::create(const char* model_id, const char* batch_id)
