@@ -16,7 +16,8 @@ namespace GraphicsDatabase
 {
 
 Database::Database(const char* filename)
-: batch_(), model_()
+:   vertex_buffer_(), index_buffer_(),
+    batch_(), model_(), texture_()
 {
     GameLib::Framework f = ::GameLib::Framework::instance();
     PseudoJson::Decoder decoder(filename);
