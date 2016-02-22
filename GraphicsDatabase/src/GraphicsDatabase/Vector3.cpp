@@ -49,6 +49,14 @@ void Vector3::clear()
     z = 0.0;
 }
 
+void Vector3::copy_from(const Vector3& base)
+{
+    x = base.x;
+    y = base.y;
+    z = base.z;
+    w = base.w;
+}
+
 void Vector3::divide(double a)
 {
     x = x / a;

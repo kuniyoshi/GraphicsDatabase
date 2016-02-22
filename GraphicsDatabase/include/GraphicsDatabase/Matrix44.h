@@ -27,6 +27,7 @@ public:
                         double far_clip);
     void rotate_yz(double angle_yz);
     void rotate_zx(double angle_zx);
+    void rotate_xy(double angle_xy);
     void scale(double a);
     void translate(const Vector3& delta);
 };

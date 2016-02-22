@@ -198,6 +198,36 @@ void Matrix44::rotate_zx(double angle)
     c3_ = -sine * a3 + cosine * c3_;
 }
 
+// |x|   | cos(theta)  -sin(theta)  0   0 | |px|
+// |y|   | sin(theta)  cos(theta)   0   0 | |py|
+// |z| = | 0           0            1   0 | |pz|
+// |w|   | 0           0            0   1 | |pw|
+//
+// | cos(theta)    -sin(theta)  0   0 | | a0_ a1_ a2_ a3_ |
+// | sin(theta)    cos(theta)   0   0 | | b0_ b1_ b2_ b3_ |
+// | 0             0            1   0 | | c0_ c1_ c2_ c3_ |
+// | 0             0            0   1 | | d0_ d1_ d2_ d3_ |
+void Matrix44::rotate_xy(double angle)
+{
+    const double cosine = GameLib::cos(angle);
+    const double sine = GameLib::sin(angle);
+
+    const double a0 = a0_;
+    const double a1 = a1_;
+    const double a2 = a2_;
+    const double a3 = a3_;
+
+    a0_ = cosine * a0_ - sine * b0_;
+    a1_ = cosine * a1_ - sine * b1_;
+    a2_ = cosine * a2_ - sine * b2_;
+    a3_ = cosine * a3_ - sine * b3_;
+
+    b0_ = sine * a0_ + cosine * b0_;
+    b1_ = sine * a1_ + cosine * b1_;
+    b2_ = sine * a2_ + cosine * b2_;
+    b3_ = sine * a3_ + cosine * b3_;
+}
+
 // | 1  0   0   delta.x | | a0_ a1_ a2_ a3_ |
 // | 0  1   0   delta.y | | b0_ b1_ b2_ b3_ |
 // | 0  0   1   delta.z | | c0_ c1_ c2_ c3_ |

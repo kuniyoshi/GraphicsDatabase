@@ -19,6 +19,7 @@ public:
     void add(const Vector3& operand);
     void be_reciprocal();
     void clear();
+    void copy_from(const Vector3& base);
     void divide(double a);
     void hadamard_product(const Vector3& operand);
     double length() const;
