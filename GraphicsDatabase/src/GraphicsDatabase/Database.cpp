@@ -37,7 +37,7 @@ Database::Database(const char* filename)
 
         std::string image_name = data.get_at(base_key + ".image");
 
-        GameLib::Texture* texture;
+        GameLib::Texture* texture = 0;
         f.createTexture(&texture, image_name.c_str());
 
         std::vector< double > vertexes;
