@@ -32,20 +32,18 @@ Database::Database(const char* filename)
         oss.str("models.");
         oss << i;
 
-        std::string base_key = oss.str();
+        const std::string base_key = oss.str();
 
-        oss << ".id";
+        oss.str(base_key + ".id");
         std::string id = data.get_at(oss.str());
 
-        oss.str(base_key);
-        oss << ".image";
+        oss.str(base_key + ".image");
         std::string image_name = data.get_at(oss.str());
 
         GameLib::Texture* texture;
         f.createTexture(&texture, image_name.c_str());
 
-        oss.str(base_key);
-        oss << ".vertexes";
+        oss.str(base_key + ".vertexes");
 
         std::vector< double > vertexes;
         data.copy_expanded_to_vector_at(&vertexes, oss.str());
@@ -54,14 +52,12 @@ Database::Database(const char* filename)
         typedef std::pair< const char*, VertexBuffer* > IdVertexBuffer;
         vertex_buffer_.insert(IdVertexBuffer(id.c_str(), vertex_buffer));
 
-        oss.str(base_key);
-        oss << ".indexes";
+        oss.str(base_key + ".indexes");
 
         std::vector< int > indexes;
         data.copy_expanded_to_vector_at(&indexes, oss.str());
 
-        oss.str(base_key);
-        oss << ".uvs";
+        oss.str(base_key + ".uvs");
 
         std::vector< double > uvs;
         data.copy_2expanded_to_vector_at(&uvs, oss.str());
