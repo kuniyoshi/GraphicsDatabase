@@ -138,6 +138,13 @@ void Matrix44::perspective( double theta,
     d3_ = -c3;
 }
 
+void Matrix44::rotate(const Vector3& angle)
+{
+    rotate_zx(angle.y);
+    rotate_yz(angle.x);
+    rotate_xy(angle.z);
+}
+
 // |x|   | 1    0           0           0 | |px|
 // |y| = | 0    cos(theta)  -sin(theta) 0 | |py|
 // |z|   | 0    sin(theta)  cos(theta)  0 | |pz|
