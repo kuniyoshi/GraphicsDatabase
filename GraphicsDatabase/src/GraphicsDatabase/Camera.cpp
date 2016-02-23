@@ -58,14 +58,14 @@ int Camera::height() const { return height_; }
 
 void Camera::height(int new_value) { height_ = new_value; }
 
-const Vector3* Camera::position() const { return &position_; }
+const Vector3& Camera::position() const { return position_; }
 
 void Camera::position(const Vector3& new_value)
 {
     position_.copy_from(new_value);
 }
 
-const Vector3* Camera::angle() const { return &angle_; }
+const Vector3& Camera::angle() const { return angle_; }
 
 void Camera::angle(const Vector3& new_value)
 {
