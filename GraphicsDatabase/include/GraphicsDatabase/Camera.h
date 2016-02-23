@@ -32,9 +32,9 @@ public:
     void width(int new_value);
     int height() const;
     void height(int new_value);
-    const Vector3& position() const;
+    const Vector3* position() const;
     void position(const Vector3& new_value);
-    const Vector3& angle() const;
+    const Vector3* angle() const;
     void angle(const Vector3& new_value);
     Matrix44 get_perspective_matrix() const;
 };
