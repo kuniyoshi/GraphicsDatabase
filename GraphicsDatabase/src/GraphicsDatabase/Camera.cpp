@@ -76,9 +76,7 @@ Matrix44 Camera::get_perspective_matrix() const
 {
     Matrix44 perspective;
     perspective.translate(-position_);
-    perspective.rotate_zx(angle_.y);
-    perspective.rotate_yz(angle_.x);
-    perspective.rotate_xy(angle_.z);
+    perspective.rotate(angle_);
     perspective.perspective(    angle_of_view_,
                                 width_,
                                 height_,
