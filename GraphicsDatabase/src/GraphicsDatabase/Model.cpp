@@ -30,7 +30,6 @@ void Model::angle(const Vector3& new_value) { angle_.copy_from(new_value); }
 void Model::draw(const Matrix44& perspective_matrix)
 {
     Matrix44 wvp;
-    // wvp.translate(-position_);
     wvp.rotate(angle_);
     wvp.translate(position_);
     wvp.dot(perspective_matrix);
