@@ -29,6 +29,8 @@ Batch::~Batch()
 void Batch::draw(const Matrix44& wvp)
 {
     GameLib::Framework f = GameLib::Framework::instance();
+    f.enableDepthTest(true);
+    f.enableDepthWrite(true);
     f.setTexture(texture_);
 
     vertex_buffer_.copy_from(*master_vertex_buffer_);
