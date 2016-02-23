@@ -7,19 +7,44 @@
 namespace GraphicsDatabase
 {
 
+namespace
+{
+
+const double NearClip       = 1.0;
+const double FarClip        = 1000.0;
+const int Width             = 100;
+const int Height            = 100;
+const double AngleOfView    = 90.0;
+const Vector3 Position(0.0, 0.0, 0.0);
+const Vector3 Angle(0.0, 0.0, 0.0);
+
+} // namespace -
+
+Camera::Camera()
+:   near_clip_(NearClip), far_clip_(FarClip),
+    width_(Width), height_(Height),
+    angle_of_view_(AngleOfView),
+    position_(Position),
+    angle_(Angle)
+{}
+
 Camera::Camera(int width, int height, double near_clip, double far_clip)
 :   near_clip_(near_clip), far_clip_(far_clip),
     width_(width), height_(height),
-    angle_of_view_(90.0),
-    position_(0.0, 0.0, 0.0),
-    angle_(0.0, 0.0, 0.0)
+    angle_of_view_(AngleOfView),
+    position_(Position),
+    angle_(Angle)
 {}
 
 Camera::~Camera() {}
 
 double Camera::near_clip() const { return near_clip_; }
 
+void Camera::near_clip(double new_value) { near_clip_ = new_value; }
+
 double Camera::far_clip() const { return far_clip_; }
+
+void Camera::far_clip(double new_value) { far_clip_ = new_value; }
 
 double Camera::angle_of_view() const { return angle_of_view_; }
 

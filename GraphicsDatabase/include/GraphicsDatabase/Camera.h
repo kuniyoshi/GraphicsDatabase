@@ -19,10 +19,13 @@ private:
     Vector3 angle_;
 
 public:
+    Camera();
     Camera(int width, int height, double near_clip, double far_clip);
     ~Camera();
     double near_clip() const;
+    void near_clip(double new_value);
     double far_clip() const;
+    void far_clip(double new_value);
     double angle_of_view() const;
     void angle_of_view(double new_value);
     const Vector3* position() const;
