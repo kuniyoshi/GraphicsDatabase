@@ -15,7 +15,7 @@ Model::Model(Batch* batch) : batch_(batch) {}
 
 Model::~Model() {}
 
-const Vector3& Model::position() const { return position_; }
+const Vector3* Model::position() const { return &position_; }
 
 void Model::position(const Vector3& new_value) { position_ = new_value; }
 

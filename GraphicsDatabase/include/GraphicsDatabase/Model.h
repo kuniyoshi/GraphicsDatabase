@@ -18,7 +18,7 @@ public:
     Model();
     Model(Batch* batch);
     ~Model();
-    const Vector3& position() const;
+    const Vector3* position() const;
     void position(const Vector3& new_value);
     void draw(const Matrix44& perspective_matrix);
     const Vector3* vertexes() const;
