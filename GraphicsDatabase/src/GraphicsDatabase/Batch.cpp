@@ -73,4 +73,14 @@ void Batch::draw(const Matrix44& wvp)
     }
 }
 
+const Vector3* Batch::vertexes() const
+{
+    return master_vertex_buffer_->vertexes();
+}
+
+size_t Batch::vertexes_size() const
+{
+    return master_vertex_buffer_->size();
+}
+
 } // namespace GraphicsDatabase

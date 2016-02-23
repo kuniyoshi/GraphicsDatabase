@@ -17,6 +17,7 @@ public:
     VertexBuffer();
     VertexBuffer(const std::vector< double >& vertexes);
     ~VertexBuffer();
+    const Vector3* vertexes() const;
     Vector3* at(size_t index) const;
     // void set_size(size_t size);
     void copy_from(const VertexBuffer& base);

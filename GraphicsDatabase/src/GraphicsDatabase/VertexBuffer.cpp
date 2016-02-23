@@ -19,6 +19,8 @@ VertexBuffer::~VertexBuffer()
     delete[] vertexes_;
 }
 
+const Vector3* VertexBuffer::vertexes() const { return vertexes_; }
+
 Vector3* VertexBuffer::at(size_t index) const
 {
     assert(index >= 0 && index < vertexes_size_);

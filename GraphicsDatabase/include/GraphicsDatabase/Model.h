@@ -21,6 +21,8 @@ public:
     const Vector3& position() const;
     void position(const Vector3& new_value);
     void draw(const Matrix44& perspective_matrix);
+    const Vector3* vertexes() const;
+    size_t vertexes_size() const;
 };
 
 } // namespace GraphicsDatabase

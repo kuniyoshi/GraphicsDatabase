@@ -27,4 +27,8 @@ void Model::draw(const Matrix44& perspective_matrix)
     batch_->draw(wvp);
 }
 
+const Vector3* Model::vertexes() const { return batch_->vertexes(); }
+
+size_t Model::vertexes_size() const { return batch_->vertexes_size(); }
+
 } // namespace GraphicsDatabase

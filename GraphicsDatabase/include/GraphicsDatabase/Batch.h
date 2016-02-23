@@ -10,6 +10,7 @@ namespace GraphicsDatabase
 class Camera;
 class IndexBuffer;
 class Matrix44;
+class Vector3;
 class VertexBuffer;
 
 class Batch
@@ -27,6 +28,8 @@ public:
             GameLib::Texture* texture);
     ~Batch();
     void draw(const Matrix44& wvp_matrix);
+    const Vector3* vertexes() const;
+    size_t vertexes_size() const;
 };
 
 } // namespace GraphicsDatabase
