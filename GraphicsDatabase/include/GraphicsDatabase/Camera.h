@@ -28,6 +28,10 @@ public:
     void far_clip(double new_value);
     double angle_of_view() const;
     void angle_of_view(double new_value);
+    int width() const;
+    void width(int new_value);
+    int height() const;
+    void height(int new_value);
     const Vector3* position() const;
     void position(const Vector3& new_value);
     const Vector3* angle() const;

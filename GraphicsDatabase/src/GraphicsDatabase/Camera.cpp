@@ -50,6 +50,14 @@ double Camera::angle_of_view() const { return angle_of_view_; }
 
 void Camera::angle_of_view(double new_value) { angle_of_view_ = new_value; }
 
+int Camera::width() const { return width_; }
+
+void Camera::width(int new_value) { width_ = new_value; }
+
+int Camera::height() const { return height_; }
+
+void Camera::height(int new_value) { height_ = new_value; }
+
 const Vector3* Camera::position() const { return &position_; }
 
 void Camera::position(const Vector3& new_value)
