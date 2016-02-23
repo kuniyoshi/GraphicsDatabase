@@ -52,12 +52,12 @@ void VertexBuffer::set_vertexes(const std::vector< double >& vertexes)
 {
     assert((vertexes.size() % 3) == 0);
     assert(!vertexes_);
-    vertexes_size_ = vertexes.size();
+    vertexes_size_ = vertexes.size() / 3;
     vertexes_ = new Vector3[vertexes_size_];
 
     for (size_t i = 0; i < vertexes.size(); i = i + 3)
     {
-        vertexes_[i].set(vertexes[i], vertexes[i + 1], vertexes[i + 2]);
+        vertexes_[i / 3].set(vertexes[i], vertexes[i + 1], vertexes[i + 2]);
     }
 }
 
