@@ -20,6 +20,7 @@ public:
     void be_reciprocal();
     void clear();
     void copy_from(const Vector3& base);
+    double dot(const Vector3& operand);
     void divide(double a);
     void hadamard_product(const Vector3& operand);
     double length() const;
@@ -29,6 +30,7 @@ public:
     void scale(double a);
     void set(double new_x, double new_y, double new_z, double new_w = 1.0);
     void set_xy(double new_x, double new_y);
+    double squared_length() const;
     void subtract(const Vector3& operand);
 };
 

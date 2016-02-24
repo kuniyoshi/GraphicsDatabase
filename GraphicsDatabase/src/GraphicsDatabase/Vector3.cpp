@@ -57,6 +57,11 @@ void Vector3::copy_from(const Vector3& base)
     w = base.w;
 }
 
+double Vector3::dot(const Vector3& operand)
+{
+    return x * operand.x + y * operand.y + z * operand.z;
+}
+
 void Vector3::divide(double a)
 {
     x = x / a;
@@ -117,6 +122,11 @@ void Vector3::set_xy(double new_x, double new_y)
 {
     x = new_x;
     y = new_y;
+}
+
+double Vector3::squared_length() const
+{
+    return pow(x, 2.0) + pow(y, 2.0) + pow(z, 2.0);
 }
 
 void Vector3::subtract(const Vector3& operand)
