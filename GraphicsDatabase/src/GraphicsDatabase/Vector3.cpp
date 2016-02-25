@@ -67,7 +67,7 @@ void Vector3::cross_product(const Vector3& operand)
     z = tx * operand.y - operand.x * ty;
 }
 
-double Vector3::dot(const Vector3& operand)
+double Vector3::dot(const Vector3& operand) const
 {
     return x * operand.x + y * operand.y + z * operand.z;
 }

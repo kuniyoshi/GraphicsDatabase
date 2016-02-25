@@ -21,7 +21,7 @@ public:
     void clear();
     void copy_from(const Vector3& base);
     void cross_product(const Vector3& operand);
-    double dot(const Vector3& operand);
+    double dot(const Vector3& operand) const;
     void divide(double a);
     void hadamard_product(const Vector3& operand);
     double length() const;
