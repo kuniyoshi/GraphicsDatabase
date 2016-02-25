@@ -57,6 +57,16 @@ void Vector3::copy_from(const Vector3& base)
     w = base.w;
 }
 
+void Vector3::cross_product(const Vector3& operand)
+{
+    double tx = x;
+    double ty = y;
+    double tz = z;
+    x = ty * operand.z - operand.y * tz;
+    y = tz * operand.x - operand.z * tx;
+    z = tx * operand.y - operand.x * ty;
+}
+
 double Vector3::dot(const Vector3& operand)
 {
     return x * operand.x + y * operand.y + z * operand.z;

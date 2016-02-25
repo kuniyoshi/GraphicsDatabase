@@ -20,6 +20,7 @@ public:
     void be_reciprocal();
     void clear();
     void copy_from(const Vector3& base);
+    void cross_product(const Vector3& operand);
     double dot(const Vector3& operand);
     void divide(double a);
     void hadamard_product(const Vector3& operand);
