@@ -40,4 +40,8 @@ const Vector3* Model::vertexes() const { return batch_->vertexes(); }
 
 size_t Model::vertexes_size() const { return batch_->vertexes_size(); }
 
+const int* Model::indexes() const { return batch_->indexes(); }
+
+size_t Model::indexes_size() const { return batch_->indexes_size(); }
+
 } // namespace GraphicsDatabase

@@ -83,4 +83,14 @@ size_t Batch::vertexes_size() const
     return master_vertex_buffer_->size();
 }
 
+const int* Batch::indexes() const
+{
+    return index_buffer_->indexes();
+}
+
+size_t Batch::indexes_size() const
+{
+    return index_buffer_->size();
+}
+
 } // namespace GraphicsDatabase

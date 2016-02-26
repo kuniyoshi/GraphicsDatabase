@@ -35,6 +35,8 @@ IndexBuffer::~IndexBuffer()
     delete[] uvs_;
 }
 
+const int* IndexBuffer::indexes() const { return indexes_; }
+
 size_t IndexBuffer::at(size_t index) const { return indexes_[index]; }
 
 Vector2* IndexBuffer::uv_at(size_t index) const { return &uvs_[index]; }

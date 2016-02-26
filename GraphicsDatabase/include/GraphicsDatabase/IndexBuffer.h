@@ -18,6 +18,7 @@ public:
     IndexBuffer(    const std::vector< int >& indexes,
                     const std::vector< double >& uvs);
     ~IndexBuffer();
+    const int* indexes() const;
     size_t at(size_t index) const;
     Vector2* uv_at(size_t index) const;
     size_t size() const;
