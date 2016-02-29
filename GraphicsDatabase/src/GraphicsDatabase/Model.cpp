@@ -9,7 +9,8 @@ namespace GraphicsDatabase
 Model::Model()
 :   batch_(0),
     position_(),
-    angle_()
+    angle_(),
+    scale_(1.0)
 {}
 
 Model::Model(Batch* batch) : batch_(batch) {}
@@ -27,9 +28,14 @@ const Vector3* Model::angle() const { return &angle_; }
 
 void Model::angle(const Vector3& new_value) { angle_.copy_from(new_value); }
 
+double Model::scale() const { return scale_; }
+
+void Model::scale(double new_value) { scale_ = new_value; }
+
 void Model::draw(const Matrix44& perspective_matrix)
 {
     Matrix44 wvp;
+    wvp.scale(scale_);
     wvp.rotate(angle_);
     wvp.translate(position_);
     wvp.dot(perspective_matrix);

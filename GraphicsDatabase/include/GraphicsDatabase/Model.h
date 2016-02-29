@@ -14,6 +14,7 @@ private:
     Batch* batch_;
     Vector3 position_;
     Vector3 angle_;
+    double scale_;
 
 public:
     Model();
@@ -23,6 +24,8 @@ public:
     void position(const Vector3& new_value);
     const Vector3* angle() const;
     void angle(const Vector3& new_value);
+    double scale() const;
+    void scale(double new_value);
     void draw(const Matrix44& perspective_matrix);
     const Vector3* vertexes() const;
     size_t vertexes_size() const;
