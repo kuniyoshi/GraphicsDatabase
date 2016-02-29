@@ -13,7 +13,12 @@ Model::Model()
     scale_(1.0)
 {}
 
-Model::Model(Batch* batch) : batch_(batch) {}
+Model::Model(Batch* batch)
+:   batch_(batch),
+    position_(),
+    angle_(),
+    scale_(1.0)
+{}
 
 Model::~Model() {}
 

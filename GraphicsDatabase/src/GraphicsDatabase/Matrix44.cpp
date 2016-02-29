@@ -260,7 +260,7 @@ void Matrix44::translate(const Vector3& delta)
 
 // | a  0   0   0 | | a0_ a1_ a2_ a3_ |
 // | 0  a   0   0 | | b0_ b1_ b2_ b3_ |
-// | 0  0   1   0 | | c0_ c1_ c2_ c3_ |
+// | 0  0   a   0 | | c0_ c1_ c2_ c3_ |
 // | 0  0   0   1 | | d0_ d1_ d2_ d3_ |
 void Matrix44::scale(double a)
 {
@@ -272,6 +272,10 @@ void Matrix44::scale(double a)
     b1_ = a * b1_;
     b2_ = a * b2_;
     b3_ = a * b3_;
+    c0_ = a * c0_;
+    c1_ = a * c1_;
+    c2_ = a * c2_;
+    c3_ = a * c3_;
 }
 
 } // namespace GraphicsDatabase
