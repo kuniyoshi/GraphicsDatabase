@@ -224,15 +224,15 @@ void Matrix44::rotate_xy(double angle)
     const double a2 = a2_;
     const double a3 = a3_;
 
-    a0_ = cosine * a0_ - sine * b0_;
-    a1_ = cosine * a1_ - sine * b1_;
-    a2_ = cosine * a2_ - sine * b2_;
-    a3_ = cosine * a3_ - sine * b3_;
+    a0_ = cosine * a0 - sine * b0_;
+    a1_ = cosine * a1 - sine * b1_;
+    a2_ = cosine * a2 - sine * b2_;
+    a3_ = cosine * a3 - sine * b3_;
 
-    b0_ = sine * a0_ + cosine * b0_;
-    b1_ = sine * a1_ + cosine * b1_;
-    b2_ = sine * a2_ + cosine * b2_;
-    b3_ = sine * a3_ + cosine * b3_;
+    b0_ = sine * a0 + cosine * b0_;
+    b1_ = sine * a1 + cosine * b1_;
+    b2_ = sine * a2 + cosine * b2_;
+    b3_ = sine * a3 + cosine * b3_;
 }
 
 // | 1  0   0   delta.x | | a0_ a1_ a2_ a3_ |
