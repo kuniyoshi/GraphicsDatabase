@@ -140,9 +140,9 @@ void Matrix44::perspective( double theta,
 
 void Matrix44::rotate(const Vector3& angle)
 {
-    rotate_zx(angle.y);
-    rotate_yz(angle.x);
     rotate_xy(angle.z);
+    rotate_yz(angle.x);
+    rotate_zx(angle.y);
 }
 
 // |x|   | 1    0           0           0 | |px|
