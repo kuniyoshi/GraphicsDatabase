@@ -101,27 +101,6 @@ void Vector3::multiply(double a)
 
 void Vector3::normalize(double max)
 {
-    double min = 0.0;
-
-    if (std::abs(x) < min)
-    {
-        min = std::abs(x);
-    }
-
-    if (std::abs(y) < min)
-    {
-        min = std::abs(y);
-    }
-
-    if (std::abs(z) < min)
-    {
-        min = std::abs(z);
-    }
-
-    x = x - min;
-    y = y - min;
-    z = z - min;
-
     double total = length() / max;
 
     x = x / total;
