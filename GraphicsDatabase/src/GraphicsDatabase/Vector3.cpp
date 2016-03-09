@@ -101,11 +101,11 @@ void Vector3::multiply(double a)
 
 void Vector3::normalize(double max)
 {
-    double total = length() / max;
+    const double the_length = length();
 
-    x = x / total;
-    y = y / total;
-    z = z / total;
+    x = x * max / the_length;
+    y = y * max / the_length;
+    z = z * max / the_length;
 }
 
 void Vector3::power(double n)
