@@ -88,6 +88,53 @@ void Batch::draw(   const Matrix44& world_matrix,
         did_change_[i] = false;
     }
 
+    Vector3* normals = new Vector3[vertex_buffer_.size()];
+
+    for (size_t i = 0; i < index_buffer_->size(); i = i + 3)
+    {
+        const size_t indexes[3] = { index_buffer_->at(i),
+                                    index_buffer_->at(i + 1),
+                                    index_buffer_->at(i + 2)};
+        Vector3* vertexes[3];
+        vertexes[0] = vertex_buffer_.at(indexes[0]);
+        vertexes[1] = vertex_buffer_.at(indexes[1]);
+        vertexes[2] = vertex_buffer_.at(indexes[2]);
+
+        for (int j = 0; j < 3; ++j)
+        {
+            if (!did_change_[indexes[j]])
+            {
+                world_matrix.multiply(vertexes[j]);
+                did_change_[indexes[j]] = true;
+            }
+        }
+
+        Vector3 p01(*vertexes[1]);
+        p01.subtract(*vertexes[0]);
+        Vector3 p02(*vertexes[2]);
+        p02.subtract(*vertexes[0]);
+        p02.cross_product(p01);
+        Vector3* normal = &p02;
+
+        for (int j = 0; j < 3; ++j)
+        {
+            normals[indexes[j]].add(*normal);
+        }
+    }
+
+    unsigned* colors = new unsigned[vertex_buffer_.size()];
+
+    for (size_t i = 0; i < vertex_buffer_.size(); ++i)
+    {
+        normals[i].normalize(1.0);
+        colors[i] = calc_color( brightness,
+                                light_vector,
+                                normals[i],
+                                ambient_brightness);
+
+        did_change_[i] = false;
+    }
+
     for (size_t i = 0; i < index_buffer_->size(); i = i + 3)
     {
         const size_t indexes[3] = { index_buffer_->at(i),
@@ -103,44 +150,28 @@ void Batch::draw(   const Matrix44& world_matrix,
         uv[1] = index_buffer_->uv_at(i + 1);
         uv[2] = index_buffer_->uv_at(i + 2);
 
-        for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
         {
-            if (!did_change_[indexes[i]])
+            if (!did_change_[indexes[j]])
             {
-                world_matrix.multiply(vertexes[i]);
-                did_change_[indexes[i]] = true;
+                perspective_matrix.multiply(vertexes[j]);
+                did_change_[indexes[j]] = true;
             }
         }
 
-        Vector3 p01(*vertexes[1]);
-        p01.subtract(*vertexes[0]);
-        Vector3 p02(*vertexes[2]);
-        p02.subtract(*vertexes[0]);
-        p02.cross_product(p01);
-        Vector3* normal = &p02;
-        unsigned color = calc_color(    brightness,
-                                        light_vector,
-                                        *normal,
-                                        ambient_brightness);
-
-        Vector3 vertexes0(*vertexes[0]);
-        Vector3 vertexes1(*vertexes[1]);
-        Vector3 vertexes2(*vertexes[2]);
-
-        perspective_matrix.multiply(&vertexes0);
-        perspective_matrix.multiply(&vertexes1);
-        perspective_matrix.multiply(&vertexes2);
-
-        f.drawTriangle3DH(  &(vertexes0.x),
-                            &(vertexes1.x),
-                            &(vertexes2.x),
+        f.drawTriangle3DH(  &(vertexes[0]->x),
+                            &(vertexes[1]->x),
+                            &(vertexes[2]->x),
                             &(uv[0]->u),
                             &(uv[1]->u),
                             &(uv[2]->u),
-                            color,
-                            color,
-                            color);
+                            colors[indexes[0]],
+                            colors[indexes[1]],
+                            colors[indexes[2]]);
     }
+
+    SAFE_DELETE_ARRAY(normals);
+    SAFE_DELETE_ARRAY(colors);
 }
 
 const Vector3* Batch::vertexes() const
