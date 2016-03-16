@@ -26,7 +26,55 @@ Batch::~Batch()
     delete[] did_change_;
 }
 
-void Batch::draw(const Matrix44& wvp)
+namespace
+{
+
+double clamp01(double value)
+{
+    if (value < 0.0)
+    {
+        return 0.0;
+    }
+    else if (value > 1.0)
+    {
+        return 1.0;
+    }
+
+    return value;
+}
+
+unsigned calc_color(    const Vector3& brightness,
+                        const Vector3& light,
+                        const Vector3& normal,
+                        double ambient_brightness)
+{
+    double cosine = light.dot(normal) / normal.length();
+
+    if (cosine < 0.0)
+    {
+        cosine = 0.0;
+    }
+
+    double color_r = brightness.x * cosine + ambient_brightness;
+    double color_g = brightness.y * cosine + ambient_brightness;
+    double color_b = brightness.z * cosine + ambient_brightness;
+
+    int r = static_cast< int >(255 * color_r + 0.5);
+    int g = static_cast< int >(255 * color_g + 0.5);
+    int b = static_cast< int >(255 * color_b + 0.5);
+
+    unsigned color = (255 << 24) + (r << 16) + (g << 8) + b;
+
+    return color;
+}
+
+} // namespace -
+
+void Batch::draw(   const Matrix44& world_matrix,
+                    const Matrix44& perspective_matrix,
+                    const Vector3& brightness,
+                    double ambient_brightness,
+                    const Vector3& light_vector)
 {
     GameLib::Framework f = GameLib::Framework::instance();
     f.enableDepthTest(true);
@@ -59,17 +107,39 @@ void Batch::draw(const Matrix44& wvp)
         {
             if (!did_change_[indexes[i]])
             {
-                wvp.multiply(vertexes[i]);
+                world_matrix.multiply(vertexes[i]);
                 did_change_[indexes[i]] = true;
             }
         }
 
-        f.drawTriangle3DH(  &(vertexes[0]->x),
-                            &(vertexes[1]->x),
-                            &(vertexes[2]->x),
+        Vector3 p01(*vertexes[1]);
+        p01.subtract(*vertexes[0]);
+        Vector3 p02(*vertexes[2]);
+        p02.subtract(*vertexes[0]);
+        p02.cross_product(p01);
+        Vector3* normal = &p02;
+        unsigned color = calc_color(    brightness,
+                                        light_vector,
+                                        *normal,
+                                        ambient_brightness);
+
+        Vector3 vertexes0(*vertexes[0]);
+        Vector3 vertexes1(*vertexes[1]);
+        Vector3 vertexes2(*vertexes[2]);
+
+        perspective_matrix.multiply(&vertexes0);
+        perspective_matrix.multiply(&vertexes1);
+        perspective_matrix.multiply(&vertexes2);
+
+        f.drawTriangle3DH(  &(vertexes0.x),
+                            &(vertexes1.x),
+                            &(vertexes2.x),
                             &(uv[0]->u),
                             &(uv[1]->u),
-                            &(uv[2]->u));
+                            &(uv[2]->u),
+                            color,
+                            color,
+                            color);
     }
 }
 

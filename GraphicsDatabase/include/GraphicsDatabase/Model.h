@@ -7,6 +7,7 @@ namespace GraphicsDatabase
 
 class Batch;
 class Matrix44;
+class Vector3;
 
 class Model
 {
@@ -26,7 +27,10 @@ public:
     void angle(const Vector3& new_value);
     double scale() const;
     void scale(double new_value);
-    void draw(const Matrix44& perspective_matrix);
+    void draw(  const Matrix44& perspective_matrix,
+                const Vector3& brightness,
+                double ambient_brightness,
+                const Vector3& light_vector);
     const Vector3* vertexes() const;
     size_t vertexes_size() const;
     const int* indexes() const;

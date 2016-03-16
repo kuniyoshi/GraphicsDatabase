@@ -27,7 +27,11 @@ public:
             IndexBuffer* index_buffer,
             GameLib::Texture* texture);
     ~Batch();
-    void draw(const Matrix44& wvp_matrix);
+    void draw(  const Matrix44& world_matrix,
+                const Matrix44& perspective_matrix,
+                const Vector3& brightness,
+                double ambient_brightness,
+                const Vector3& light_vector);
     const Vector3* vertexes() const;
     size_t vertexes_size() const;
     const int* indexes() const;

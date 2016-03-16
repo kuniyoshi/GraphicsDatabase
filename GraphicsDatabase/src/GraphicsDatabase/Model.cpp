@@ -37,14 +37,20 @@ double Model::scale() const { return scale_; }
 
 void Model::scale(double new_value) { scale_ = new_value; }
 
-void Model::draw(const Matrix44& perspective_matrix)
+void Model::draw(   const Matrix44& perspective_matrix,
+                    const Vector3& brightness,
+                    double ambient_brightness,
+                    const Vector3& light_vector)
 {
-    Matrix44 wvp;
-    wvp.scale(scale_);
-    wvp.rotate(angle_);
-    wvp.translate(position_);
-    wvp.dot(perspective_matrix);
-    batch_->draw(wvp);
+    Matrix44 world_matrix;
+    world_matrix.scale(scale_);
+    world_matrix.rotate(angle_);
+    world_matrix.translate(position_);
+    batch_->draw(   world_matrix,
+                    perspective_matrix,
+                    brightness,
+                    ambient_brightness,
+                    light_vector);
 }
 
 const Vector3* Model::vertexes() const { return batch_->vertexes(); }
