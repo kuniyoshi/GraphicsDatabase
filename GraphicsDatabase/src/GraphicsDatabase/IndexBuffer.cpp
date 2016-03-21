@@ -14,7 +14,8 @@ IndexBuffer::IndexBuffer(   const std::vector< int >& indexes,
     assert((uvs.size() % 6) == 0);
     assert(!uvs.size() || (2 * indexes.size() == uvs.size()));
 
-    indexes_ = new int[indexes.size()];
+    indexes_size_ = indexes.size();
+    indexes_ = new int[indexes_size_];
 
     for (size_t i = 0; i < indexes_size_; ++i)
     {
@@ -24,7 +25,7 @@ IndexBuffer::IndexBuffer(   const std::vector< int >& indexes,
     if (uvs.size())
     {
         has_uvs_ = true;
-        uvs_ = new Vector2[indexes.size()];
+        uvs_ = new Vector2[indexes_size_];
         dummy_ = 0;
 
         for (size_t i = 0; i < uvs.size(); i += 2)
