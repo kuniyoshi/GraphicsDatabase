@@ -17,6 +17,7 @@ VertexBuffer::VertexBuffer(const std::vector< double >& vertexes)
 VertexBuffer::~VertexBuffer()
 {
     delete[] vertexes_;
+    vertexes_ = 0;
 }
 
 const Vector3* VertexBuffer::vertexes() const { return vertexes_; }

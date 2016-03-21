@@ -24,6 +24,7 @@ Batch::Batch(   VertexBuffer* vertex_buffer,
 Batch::~Batch()
 {
     delete[] did_change_;
+    did_change_ = 0;
 }
 
 namespace

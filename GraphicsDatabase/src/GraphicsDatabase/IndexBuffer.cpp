@@ -32,7 +32,13 @@ IndexBuffer::IndexBuffer(   const std::vector< int >& indexes,
 IndexBuffer::~IndexBuffer()
 {
     delete[] indexes_;
-    delete[] uvs_;
+    indexes_ = 0;
+
+    if (uvs_)
+    {
+        delete[] uvs_;
+        uvs_ = 0;
+    }
 }
 
 const int* IndexBuffer::indexes() const { return indexes_; }
