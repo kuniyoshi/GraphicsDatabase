@@ -10,8 +10,10 @@ class Vector2;
 class IndexBuffer
 {
 private:
-    int* indexes_;
+    Vector2* dummy_;
     Vector2* uvs_;
+    bool has_uvs_;
+    int* indexes_;
     size_t indexes_size_;
 
 public:

@@ -35,13 +35,16 @@ Database::Database(const char* filename)
         const std::string base_key = oss.str();
         const std::string id = data.get_at(base_key + ".id");
 
-        const std::string image_name = data.get_at(base_key + ".image");
-
+        const std::string image_key = base_key + ".image";
         GameLib::Texture* texture = 0;
-        f.createTexture(&texture, image_name.c_str());
 
-        typedef std::pair< const std::string, GameLib::Texture* > IdTexture;
-        texture_.insert(IdTexture(id, texture));
+        if (data.does_exist(image_key))
+        {
+            const std::string image_name = data.get_at(image_key);
+            f.createTexture(&texture, image_name.c_str());
+            typedef std::pair< const std::string, GameLib::Texture* > IdTexture;
+            texture_.insert(IdTexture(id, texture));
+        }
 
         std::vector< double > vertexes;
         data.copy_expanded_to_vector_at(&vertexes, base_key + ".vertexes");
@@ -53,8 +56,16 @@ Database::Database(const char* filename)
         std::vector< int > indexes;
         data.copy_expanded_to_vector_at(&indexes, base_key + ".indexes");
 
+        const std::string uvs_key = base_key + ".uvs";
+
+        assert(data.does_exist(image_key) == data.does_exist(uvs_key));
+
         std::vector< double > uvs;
-        data.copy_2expanded_to_vector_at(&uvs, base_key + ".uvs");
+
+        if (data.does_exist(uvs_key))
+        {
+            data.copy_2expanded_to_vector_at(&uvs, uvs_key);
+        }
 
         IndexBuffer* index_buffer = new IndexBuffer(indexes, uvs);
         typedef std::pair< const std::string, IndexBuffer* > IdIndexBuffer;
