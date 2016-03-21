@@ -49,7 +49,7 @@ unsigned calc_color(    const Vector3& brightness,
                         const Vector3& normal,
                         double ambient_brightness)
 {
-    double cosine = light.dot(normal) / normal.length();
+    double cosine = light.dot(normal) / light.length();
 
     if (cosine < 0.0)
     {
@@ -116,10 +116,12 @@ void Batch::draw(   const Matrix44& world_matrix,
         p02.subtract(*vertexes[0]);
         p02.cross_product(p01);
         Vector3* normal = &p02;
+        normal->normalize(1.0);
 
         for (int j = 0; j < 3; ++j)
         {
             normals[indexes[j]].add(*normal);
+            normals[indexes[j]].normalize(1.0);
         }
     }
 
