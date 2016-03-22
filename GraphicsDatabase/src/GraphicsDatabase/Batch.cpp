@@ -177,6 +177,81 @@ void Batch::draw(   const Matrix44& world_matrix,
     SAFE_DELETE_ARRAY(colors);
 }
 
+void Batch::draw_flat_shading(  const Matrix44& world_matrix,
+                                const Matrix44& perspective_matrix,
+                                const Vector3& brightness,
+                                double ambient_brightness,
+                                const Vector3& light_vector)
+{
+    GameLib::Framework f = GameLib::Framework::instance();
+    f.enableDepthTest(true);
+    f.enableDepthWrite(true);
+    f.setTexture(texture_);
+
+    vertex_buffer_.copy_from(*master_vertex_buffer_);
+
+    for (size_t i = 0; i < master_vertex_buffer_->size(); ++i)
+    {
+        did_change_[i] = false;
+    }
+
+    for (size_t i = 0; i < index_buffer_->size(); i = i + 3)
+    {
+        const size_t indexes[3] = { index_buffer_->at(i),
+                                    index_buffer_->at(i + 1),
+                                    index_buffer_->at(i + 2)};
+        Vector3* vertexes[3];
+        vertexes[0] = vertex_buffer_.at(indexes[0]);
+        vertexes[1] = vertex_buffer_.at(indexes[1]);
+        vertexes[2] = vertex_buffer_.at(indexes[2]);
+
+        Vector2* uv[3];
+        uv[0] = index_buffer_->uv_at(i);
+        uv[1] = index_buffer_->uv_at(i + 1);
+        uv[2] = index_buffer_->uv_at(i + 2);
+
+        for (int j = 0; j < 3; ++j)
+        {
+            if (!did_change_[indexes[j]])
+            {
+                world_matrix.multiply(vertexes[j]);
+                did_change_[indexes[j]] = true;
+            }
+        }
+
+        Vector3 p01(*vertexes[1]);
+        p01.subtract(*vertexes[0]);
+        Vector3 p02(*vertexes[2]);
+        p02.subtract(*vertexes[0]);
+        p02.cross_product(p01);
+        Vector3* normal = &p02;
+        normal->normalize(1.0);
+
+        unsigned color = calc_color(    brightness,
+                                        light_vector,
+                                        *normal,
+                                        ambient_brightness);
+
+        Vector3 vertex0(*vertexes[0]);
+        Vector3 vertex1(*vertexes[1]);
+        Vector3 vertex2(*vertexes[2]);
+
+        perspective_matrix.multiply(&vertex0);
+        perspective_matrix.multiply(&vertex1);
+        perspective_matrix.multiply(&vertex2);
+
+        f.drawTriangle3DH(  &(vertex0.x),
+                            &(vertex1.x),
+                            &(vertex2.x),
+                            &(uv[0]->u),
+                            &(uv[1]->u),
+                            &(uv[2]->u),
+                            color,
+                            color,
+                            color);
+    }
+}
+
 const Vector3* Batch::vertexes() const
 {
     return master_vertex_buffer_->vertexes();

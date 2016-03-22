@@ -32,6 +32,11 @@ public:
                 const Vector3& brightness,
                 double ambient_brightness,
                 const Vector3& light_vector);
+    void draw_flat_shading( const Matrix44& world_matrix,
+                            const Matrix44& perspective_matrix,
+                            const Vector3& brightness,
+                            double ambient_brightness,
+                            const Vector3& light_vector);
     const Vector3* vertexes() const;
     size_t vertexes_size() const;
     const int* indexes() const;
