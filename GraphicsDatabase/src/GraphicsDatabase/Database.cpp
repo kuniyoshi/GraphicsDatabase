@@ -24,7 +24,7 @@ Database::Database(const char* filename)
     decoder.decode();
     const PseudoJson::Data data(decoder.data());
 
-    size_t model_size = data.size_of("models");
+    const size_t model_size = data.size_of("models");
 
     std::ostringstream oss;
 
