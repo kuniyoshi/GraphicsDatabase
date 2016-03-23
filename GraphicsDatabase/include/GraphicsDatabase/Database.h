@@ -15,11 +15,11 @@ class VertexBuffer;
 class Database
 {
 private:
-    std::map< const std::string, VertexBuffer* > vertex_buffer_;
-    std::map< const std::string, IndexBuffer* > index_buffer_;
     std::map< const std::string, Batch* > batch_;
-    std::map< const std::string, Model* > model_;
     std::map< const std::string, GameLib::Texture* > texture_;
+    std::map< const std::string, IndexBuffer* > index_buffer_;
+    std::map< const std::string, Model* > model_;
+    std::map< const std::string, VertexBuffer* > vertex_buffer_;
 
 public:
     Database(const char* filename);
