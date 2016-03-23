@@ -53,7 +53,7 @@ void Node::draw(    const Matrix44& perspective_matrix,
                     ambient_brightness,
                     light_vector);
 
-    Matrix44 wcpm(model_->translation_matrix());
+    Matrix44 wcpm(model_->world_matrix());
     wcpm.dot(perspective_matrix);
 
     for (int i = 0; i < children_size_; ++i)
@@ -75,7 +75,7 @@ void Node::draw_flat_shading(   const Matrix44& perspective_matrix,
                                 ambient_brightness,
                                 light_vector);
 
-    Matrix44 wcpm(model_->translation_matrix());
+    Matrix44 wcpm(model_->world_matrix());
     wcpm.dot(perspective_matrix);
 
     for (int i = 0; i < children_size_; ++i)

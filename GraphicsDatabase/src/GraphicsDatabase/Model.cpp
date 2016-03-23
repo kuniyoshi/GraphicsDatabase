@@ -107,9 +107,16 @@ Matrix44 Model::translation_matrix() const
 
 Matrix44 Model::world_matrix() const
 {
-    Matrix44 world_matrix;
-    make_world_matrix(&world_matrix, scale_, angle_, position_);
-    return world_matrix;
+    if (!batch_)
+    {
+        Matrix44 world_matrix;
+        make_world_matrix(&world_matrix, scale_, angle_, position_);
+        return world_matrix;
+    }
+    else
+    {
+        return translation_matrix();
+    }
 }
 
 } // namespace GraphicsDatabase
