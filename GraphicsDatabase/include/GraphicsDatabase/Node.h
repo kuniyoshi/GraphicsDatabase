@@ -4,25 +4,29 @@
 namespace GraphicsDatabase
 {
 
+class Matrix44;
 class Model;
+class Vector3;
 
 class Node
 {
 private:
-    Model* model_;
-    Node* children_;
+    const Model* model_;
+    Node** children_;
     int children_size_;
 
 public:
     Node();
     Node(int children_size);
     ~Node();
+    void init_children(int children_size);
     void set_model(const Model*);
-    void set_child(const Node* child, int index);
+    void set_child(Node* child, int index);
+
     void draw(  const Matrix44& perspective_matrix,
-            const Vector3& brightness,
-            double ambient_brightness,
-            const Vector3& light_vector) const;
+                const Vector3& brightness,
+                double ambient_brightness,
+                const Vector3& light_vector) const;
 };
 
 } // namespace GraphicsDatabase
