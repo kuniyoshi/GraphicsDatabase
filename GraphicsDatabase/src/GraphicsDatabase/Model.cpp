@@ -37,15 +37,28 @@ double Model::scale() const { return scale_; }
 
 void Model::scale(double new_value) { scale_ = new_value; }
 
+namespace
+{
+
+void make_world_matrix( Matrix44* world_matrix,
+                        const double scale,
+                        const Vector3& angle,
+                        const Vector3& position)
+{
+    world_matrix->scale(scale);
+    world_matrix->rotate(angle);
+    world_matrix->translate(position);
+}
+
+} // namespace -
+
 void Model::draw(   const Matrix44& perspective_matrix,
                     const Vector3& brightness,
                     double ambient_brightness,
                     const Vector3& light_vector) const
 {
     Matrix44 world_matrix;
-    world_matrix.scale(scale_);
-    world_matrix.rotate(angle_);
-    world_matrix.translate(position_);
+    make_world_matrix(&world_matrix, scale_, angle_, position_);
     batch_->draw(   world_matrix,
                     perspective_matrix,
                     brightness,
@@ -59,9 +72,7 @@ void Model::draw_flat_shading(  const Matrix44& perspective_matrix,
                                 const Vector3& light_vector) const
 {
     Matrix44 world_matrix;
-    world_matrix.scale(scale_);
-    world_matrix.rotate(angle_);
-    world_matrix.translate(position_);
+    make_world_matrix(&world_matrix, scale_, angle_, position_);
     batch_->draw_flat_shading(  world_matrix,
                                 perspective_matrix,
                                 brightness,
@@ -76,5 +87,12 @@ size_t Model::vertexes_size() const { return batch_->vertexes_size(); }
 const int* Model::indexes() const { return batch_->indexes(); }
 
 size_t Model::indexes_size() const { return batch_->indexes_size(); }
+
+Matrix44 Model::world_matrix() const
+{
+    Matrix44 world_matrix;
+    make_world_matrix(&world_matrix, scale_, angle_, position_);
+    return world_matrix;
+}
 
 } // namespace GraphicsDatabase

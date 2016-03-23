@@ -39,6 +39,7 @@ public:
     size_t vertexes_size() const;
     const int* indexes() const;
     size_t indexes_size() const;
+    Matrix44 world_matrix() const;
 };
 
 } // namespace GraphicsDatabase
