@@ -40,7 +40,7 @@ void Model::scale(double new_value) { scale_ = new_value; }
 void Model::draw(   const Matrix44& perspective_matrix,
                     const Vector3& brightness,
                     double ambient_brightness,
-                    const Vector3& light_vector)
+                    const Vector3& light_vector) const
 {
     Matrix44 world_matrix;
     world_matrix.scale(scale_);
@@ -56,7 +56,7 @@ void Model::draw(   const Matrix44& perspective_matrix,
 void Model::draw_flat_shading(  const Matrix44& perspective_matrix,
                                 const Vector3& brightness,
                                 double ambient_brightness,
-                                const Vector3& light_vector)
+                                const Vector3& light_vector) const
 {
     Matrix44 world_matrix;
     world_matrix.scale(scale_);
