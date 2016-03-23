@@ -57,6 +57,11 @@ void Model::draw(   const Matrix44& perspective_matrix,
                     double ambient_brightness,
                     const Vector3& light_vector) const
 {
+    if (!batch_)
+    {
+        return;
+    }
+
     Matrix44 world_matrix;
     make_world_matrix(&world_matrix, scale_, angle_, position_);
     batch_->draw(   world_matrix,
@@ -71,6 +76,11 @@ void Model::draw_flat_shading(  const Matrix44& perspective_matrix,
                                 double ambient_brightness,
                                 const Vector3& light_vector) const
 {
+    if (!batch_)
+    {
+        return;
+    }
+
     Matrix44 world_matrix;
     make_world_matrix(&world_matrix, scale_, angle_, position_);
     batch_->draw_flat_shading(  world_matrix,

@@ -122,6 +122,16 @@ Database::~Database()
     }
 }
 
+void Database::create(const std::string& model_id)
+{
+    std::map< const std::string, Model* >::iterator model_iterator
+    = model_.find(model_id);
+    assert(model_iterator == model_.end());
+
+    Model* model = new Model();
+    model_.insert(std::pair< const std::string, Model* >(model_id, model));
+}
+
 void Database::create(const std::string& model_id, const std::string& batch_id)
 {
     Batch* batch = batch_.at(batch_id);

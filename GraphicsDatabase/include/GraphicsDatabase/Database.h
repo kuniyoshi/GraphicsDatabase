@@ -24,6 +24,7 @@ private:
 public:
     Database(const char* filename);
     ~Database();
+    void create(const std::string& model_id);
     void create(const std::string& model_id, const std::string& batch_id);
     Model* find(const std::string& model_id) const;
 };
