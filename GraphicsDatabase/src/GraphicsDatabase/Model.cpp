@@ -88,6 +88,13 @@ const int* Model::indexes() const { return batch_->indexes(); }
 
 size_t Model::indexes_size() const { return batch_->indexes_size(); }
 
+Matrix44 Model::translation_matrix() const
+{
+    Matrix44 translation_matrix;
+    translation_matrix.translate(position_);
+    return translation_matrix;
+}
+
 Matrix44 Model::world_matrix() const
 {
     Matrix44 world_matrix;
