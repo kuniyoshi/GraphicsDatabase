@@ -27,6 +27,10 @@ public:
                 const Vector3& brightness,
                 double ambient_brightness,
                 const Vector3& light_vector) const;
+    void draw_flat_shading( const Matrix44& perspective_matrix,
+                            const Vector3& brightness,
+                            double ambient_brightness,
+                            const Vector3& light_vector) const;
 };
 
 } // namespace GraphicsDatabase
