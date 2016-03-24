@@ -177,6 +177,9 @@
     <ClCompile Include="src\GraphicsDatabase\Matrix44.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Model.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Node.cpp" />
+    <ClCompile Include="src\GraphicsDatabase\NodeTemplate.cpp" />
+    <ClCompile Include="src\GraphicsDatabase\Tree.cpp" />
+    <ClCompile Include="src\GraphicsDatabase\TreeTemplate.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Vector2.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Vector3.cpp" />
     <ClCompile Include="src\GraphicsDatabase\VertexBuffer.cpp" />
@@ -190,6 +193,9 @@
     <ClInclude Include="include\GraphicsDatabase\Matrix44.h" />
     <ClInclude Include="include\GraphicsDatabase\Model.h" />
     <ClInclude Include="include\GraphicsDatabase\Node.h" />
+    <ClInclude Include="include\GraphicsDatabase\NodeTemplate.h" />
+    <ClInclude Include="include\GraphicsDatabase\Tree.h" />
+    <ClInclude Include="include\GraphicsDatabase\TreeTemplate.h" />
     <ClInclude Include="include\GraphicsDatabase\Vector2.h" />
     <ClInclude Include="include\GraphicsDatabase\Vector3.h" />
     <ClInclude Include="include\GraphicsDatabase\VertexBuffer.h" />
