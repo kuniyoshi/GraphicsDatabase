@@ -10,10 +10,78 @@
 #include "GraphicsDatabase/Batch.h"
 #include "GraphicsDatabase/IndexBuffer.h"
 #include "GraphicsDatabase/Model.h"
+#include "GraphicsDatabase/NodeTemplate.h"
+#include "GraphicsDatabase/Tree.h"
+#include "GraphicsDatabase/TreeTemplate.h"
 #include "GraphicsDatabase/VertexBuffer.h"
 
 namespace GraphicsDatabase
 {
+
+namespace
+{
+
+void append_children(   NodeTemplate* parent,
+                        const PseudoJson::Data& data,
+                        const std::string& key)
+{
+    if (data.does_exist(key + ".model"))
+    {
+        parent->model_id(data.get_at(key + ".model"));
+    }
+
+    if (data.does_exist(key + ".scale"))
+    {
+        parent->scale(data.get_double_at(key + ".scale"));
+    }
+
+    if (data.does_exist(key + ".angle"))
+    {
+        std::vector< double > angle;
+        data.copy_to_vector_at(&angle, key + ".angle");
+        parent->angle(angle);
+    }
+
+    if (data.does_exist(key + ".position"))
+    {
+        std::vector< double > position;
+        data.copy_to_vector_at(&position, key + ".position");
+        parent->position(position);
+    }
+
+    if (!data.does_exist(key + ".children"))
+    {
+        return;
+    }
+
+    size_t size = data.size_of(key + ".children");
+
+    if (!size)
+    {
+        return;
+    }
+
+    const size_t children_size = data.size_of(key + ".children");
+    parent->children_size(children_size);
+    parent->reserve_children();
+
+    std::ostringstream oss;
+
+    for (size_t i = 0; i < size; ++i)
+    {
+        oss.str("");
+        oss << key << ".children." << i;
+        const std::string base_key = oss.str();
+        const std::string child_key = base_key + data.get_at(base_key + ".id");
+
+        NodeTemplate* child = new NodeTemplate(child_key);
+        parent->set_child(child, i);
+
+        append_children(child, data, base_key);
+    }
+}
+
+} // namespace -
 
 Database::Database(const char* filename)
 :   vertex_buffer_(), index_buffer_(),
@@ -75,10 +143,44 @@ Database::Database(const char* filename)
         typedef std::pair< const std::string, Batch* > IdBatch;
         batch_.insert(IdBatch(id, batch));
     }
+
+    const size_t trees_size = data.size_of("trees");
+
+    for (size_t i = 0; i < trees_size; ++i)
+    {
+        oss.str("");
+        oss << "trees." << i;
+        const std::string base_key = oss.str();
+        const std::string id = data.get_at(base_key + ".id");
+
+        TreeTemplate* tree_template = new TreeTemplate(id);
+        NodeTemplate* root = new NodeTemplate(id);
+        tree_template->root(root);
+        append_children(root, data, base_key);
+
+        typedef std::pair< const std::string, TreeTemplate* > IdTreeTemplate;
+        tree_template_.insert(IdTreeTemplate(id, tree_template));
+    }
 }
 
 Database::~Database()
 {
+    std::map< const std::string, Tree* >::iterator tree_it
+    = tree_.begin();
+
+    for (; tree_it != tree_.end(); ++tree_it)
+    {
+        SAFE_DELETE(tree_it->second);
+    }
+
+    std::map< const std::string, TreeTemplate* >::iterator tree_template_it
+    = tree_template_.begin();
+
+    for (; tree_template_it != tree_template_.end(); ++tree_template_it)
+    {
+        SAFE_DELETE(tree_template_it->second);
+    }
+
     std::map< const std::string, Model* >::iterator model_iterator
     = model_.begin();
 
@@ -122,16 +224,6 @@ Database::~Database()
     }
 }
 
-void Database::create(const std::string& model_id)
-{
-    std::map< const std::string, Model* >::iterator model_iterator
-    = model_.find(model_id);
-    assert(model_iterator == model_.end());
-
-    Model* model = new Model();
-    model_.insert(std::pair< const std::string, Model* >(model_id, model));
-}
-
 void Database::create(const std::string& model_id, const std::string& batch_id)
 {
     Batch* batch = batch_.at(batch_id);
@@ -144,9 +236,29 @@ void Database::create(const std::string& model_id, const std::string& batch_id)
     model_.insert(std::pair< const std::string, Model* >(model_id, model));
 }
 
+void Database::create_tree( const std::string& tree_id,
+                            const std::string& template_id)
+{
+    std::map< const std::string, Tree* >::iterator tree_it
+    = tree_.find(tree_id);
+    assert(tree_it == tree_.end());
+
+    std::map< const std::string, TreeTemplate* >::iterator template_it
+    = tree_template_.find(template_id);
+    assert(template_it != tree_template_.end());
+
+    Tree* tree = new Tree(this, template_it->second);
+    tree_.insert(std::pair< const std::string, Tree* >(tree_id, tree));
+}
+
 Model* Database::find(const std::string& model_id) const
 {
     return model_.at(model_id);
+}
+
+Tree* Database::find_tree(const std::string& tree_id) const
+{
+    return tree_.at(tree_id);
 }
 
 } // namespace GraphicsDatabase

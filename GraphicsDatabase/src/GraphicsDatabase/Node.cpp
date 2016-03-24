@@ -1,19 +1,38 @@
 #include "GraphicsDatabase/Node.h"
 #include <cassert>
+#include <string>
 #include "GraphicsDatabase/Matrix44.h"
 #include "GraphicsDatabase/Model.h"
+#include "GraphicsDatabase/NodeTemplate.h"
 #include "GraphicsDatabase/Vector3.h"
 
 namespace GraphicsDatabase
 {
 
-Node::Node()
-:   model_(0), children_(0), children_size_(0)
+Node::Node(const std::string& id)
+:   id_(id), model_(0),
+    children_(0), children_size_(0),
+    does_model_in_database_(true)
 {}
 
 Node::~Node()
 {
+    if (!does_model_in_database_)
+    {
+        delete model_;
+    }
+    else
+    {
+        ; // will be deleted at ~Database
+    }
+
     model_ = 0;
+
+    for (size_t i = 0; i < children_size_; ++i)
+    {
+        delete children_[i];
+        children_[i] = 0;
+    }
 
     if (children_)
     {
@@ -22,25 +41,52 @@ Node::~Node()
     }
 }
 
-void Node::init_children(int children_size)
-{
-    assert(children_size_ == 0);
-    assert(children_ == 0);
+const std::string* Node::id() const { return &id_; }
 
-    children_size_ = children_size;
-    children_ = new Node*[children_size_];
-}
+Model* Node::model() { return model_; }
 
-void Node::set_model(const Model* model)
+void Node::model(Model* new_value) { model_ = new_value; }
+
+size_t Node::children_size() const { return children_size_; }
+
+void Node::children_size(int new_value)
 {
-    assert(!model_);
-    model_ = model;
+    assert(children_size_ == 0 && new_value >= 0);
+    children_size_ = new_value;
 }
 
 void Node::set_child(Node* child, int index)
 {
-    assert(index >= 0 && index <= children_size_);
+    assert(index >= 0 && static_cast< unsigned >(index) <= children_size_);
     children_[index] = child;
+}
+
+void Node::setup_model(const NodeTemplate& node_template)
+{
+    if (!model_)
+    {
+        model_ = new Model;
+        does_model_in_database_ = false;
+    }
+
+    model_->scale(node_template.scale());
+    const double* angle = node_template.angle();
+    model_->angle(Vector3(angle[0], angle[1], angle[2]));
+    const double* position = node_template.position();
+    model_->position(Vector3(position[0], position[1], position[2]));
+}
+
+void Node::reserve_children()
+{
+    assert(!children_);
+    assert(children_size_ != 0);
+
+    children_ = new Node*[children_size_];
+
+    for (size_t i = 0; i < children_size_; ++i)
+    {
+        children_[i] = 0;
+    }
 }
 
 void Node::draw(    const Matrix44& perspective_matrix,
@@ -56,7 +102,7 @@ void Node::draw(    const Matrix44& perspective_matrix,
     Matrix44 wcpm(model_->world_matrix());
     wcpm.dot(perspective_matrix);
 
-    for (int i = 0; i < children_size_; ++i)
+    for (size_t i = 0; i < children_size_; ++i)
     {
         children_[i]->draw( wcpm,
                             brightness,
@@ -78,7 +124,7 @@ void Node::draw_flat_shading(   const Matrix44& perspective_matrix,
     Matrix44 wcpm(model_->world_matrix());
     wcpm.dot(perspective_matrix);
 
-    for (int i = 0; i < children_size_; ++i)
+    for (size_t i = 0; i < children_size_; ++i)
     {
         children_[i]->draw_flat_shading(    wcpm,
                                             brightness,

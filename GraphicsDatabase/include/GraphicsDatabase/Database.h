@@ -10,6 +10,8 @@ namespace GraphicsDatabase
 class Batch;
 class IndexBuffer;
 class Model;
+class Tree;
+class TreeTemplate;
 class VertexBuffer;
 
 class Database
@@ -20,13 +22,17 @@ private:
     std::map< const std::string, IndexBuffer* > index_buffer_;
     std::map< const std::string, Model* > model_;
     std::map< const std::string, VertexBuffer* > vertex_buffer_;
+    std::map< const std::string, Tree* > tree_;
+    std::map< const std::string, TreeTemplate* > tree_template_;
 
 public:
     Database(const char* filename);
     ~Database();
-    void create(const std::string& model_id);
     void create(const std::string& model_id, const std::string& batch_id);
+    void create_tree(   const std::string& tree_id,
+                        const std::string& template_id);
     Model* find(const std::string& model_id) const;
+    Tree* find_tree(const std::string& tree_id) const;
 };
 
 } // namespace GraphicsDatabase
