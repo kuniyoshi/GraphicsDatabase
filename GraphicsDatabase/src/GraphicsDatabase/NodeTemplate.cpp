@@ -74,6 +74,12 @@ void NodeTemplate::position(const std::vector< double >& position)
     position_[2] = position.at(2);
 }
 
+const NodeTemplate* NodeTemplate::child(int index) const
+{
+    assert(index >= 0 && static_cast< unsigned >(index) <= children_size_);
+    return children_[index];
+}
+
 void NodeTemplate::reserve_children()
 {
     children_ = new NodeTemplate*[children_size_];
@@ -82,12 +88,6 @@ void NodeTemplate::reserve_children()
     {
         children_[i] = 0;
     }
-}
-
-const NodeTemplate* NodeTemplate::child(int index) const
-{
-    assert(index >= 0 && static_cast< unsigned >(index) <= children_size_);
-    return children_[index];
 }
 
 void NodeTemplate::set_child(NodeTemplate* child, int index)

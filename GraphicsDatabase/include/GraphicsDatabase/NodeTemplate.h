@@ -31,8 +31,9 @@ public:
     void angle(const std::vector< double >& angle);
     const double* position() const;
     void position(const std::vector< double >& position);
-    void reserve_children();
+
     const NodeTemplate* child(int index) const;
+    void reserve_children();
     void set_child(NodeTemplate* child, int index);
 };
 
