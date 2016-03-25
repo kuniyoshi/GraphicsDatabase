@@ -169,6 +169,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GraphicsDatabase\Animation.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Batch.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Camera.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Database.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="src\GraphicsDatabase\Model.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Node.cpp" />
     <ClCompile Include="src\GraphicsDatabase\NodeTemplate.cpp" />
+    <ClCompile Include="src\GraphicsDatabase\TheCompletion.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Tree.cpp" />
     <ClCompile Include="src\GraphicsDatabase\TreeTemplate.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Vector2.cpp" />
@@ -185,6 +187,7 @@
     <ClCompile Include="src\GraphicsDatabase\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\GraphicsDatabase\Animation.h" />
     <ClInclude Include="include\GraphicsDatabase\Batch.h" />
     <ClInclude Include="include\GraphicsDatabase\Camera.h" />
     <ClInclude Include="include\GraphicsDatabase\Database.h" />
@@ -194,6 +197,7 @@
     <ClInclude Include="include\GraphicsDatabase\Model.h" />
     <ClInclude Include="include\GraphicsDatabase\Node.h" />
     <ClInclude Include="include\GraphicsDatabase\NodeTemplate.h" />
+    <ClInclude Include="include\GraphicsDatabase\TheCompletion.h" />
     <ClInclude Include="include\GraphicsDatabase\Tree.h" />
     <ClInclude Include="include\GraphicsDatabase\TreeTemplate.h" />
     <ClInclude Include="include\GraphicsDatabase\Vector2.h" />
