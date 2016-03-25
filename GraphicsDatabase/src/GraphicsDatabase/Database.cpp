@@ -92,74 +92,80 @@ Database::Database(const char* filename)
     decoder.decode();
     const PseudoJson::Data data(decoder.data());
 
-    const size_t model_size = data.size_of("models");
-
     std::ostringstream oss;
 
-    for (size_t i = 0; i < model_size; ++i)
+    // read models
     {
-        oss.str("");
-        oss << "models." << i;
-        const std::string base_key = oss.str();
-        const std::string id = data.get_at(base_key + ".id");
+        const size_t model_size = data.size_of("models");
 
-        const std::string image_key = base_key + ".image";
-        GameLib::Texture* texture = 0;
-
-        if (data.does_exist(image_key))
+        for (size_t i = 0; i < model_size; ++i)
         {
-            const std::string image_name = data.get_at(image_key);
-            f.createTexture(&texture, image_name.c_str());
-            typedef std::pair< const std::string, GameLib::Texture* > IdTexture;
-            texture_.insert(IdTexture(id, texture));
+            oss.str("");
+            oss << "models." << i;
+            const std::string base_key = oss.str();
+            const std::string id = data.get_at(base_key + ".id");
+
+            const std::string image_key = base_key + ".image";
+            GameLib::Texture* texture = 0;
+
+            if (data.does_exist(image_key))
+            {
+                const std::string image_name = data.get_at(image_key);
+                f.createTexture(&texture, image_name.c_str());
+                typedef std::pair< const std::string, GameLib::Texture* > IdTexture;
+                texture_.insert(IdTexture(id, texture));
+            }
+
+            std::vector< double > vertexes;
+            data.copy_expanded_to_vector_at(&vertexes, base_key + ".vertexes");
+
+            VertexBuffer* vertex_buffer = new VertexBuffer(vertexes);
+            typedef std::pair< const std::string, VertexBuffer* > IdVertexBuffer;
+            vertex_buffer_.insert(IdVertexBuffer(id, vertex_buffer));
+
+            std::vector< int > indexes;
+            data.copy_expanded_to_vector_at(&indexes, base_key + ".indexes");
+
+            const std::string uvs_key = base_key + ".uvs";
+
+            assert(data.does_exist(image_key) == data.does_exist(uvs_key));
+
+            std::vector< double > uvs;
+
+            if (data.does_exist(uvs_key))
+            {
+                data.copy_2expanded_to_vector_at(&uvs, uvs_key);
+            }
+
+            IndexBuffer* index_buffer = new IndexBuffer(indexes, uvs);
+            typedef std::pair< const std::string, IndexBuffer* > IdIndexBuffer;
+            index_buffer_.insert(IdIndexBuffer(id, index_buffer));
+
+            Batch* batch = new Batch(vertex_buffer, index_buffer, texture);
+            typedef std::pair< const std::string, Batch* > IdBatch;
+            batch_.insert(IdBatch(id, batch));
         }
-
-        std::vector< double > vertexes;
-        data.copy_expanded_to_vector_at(&vertexes, base_key + ".vertexes");
-
-        VertexBuffer* vertex_buffer = new VertexBuffer(vertexes);
-        typedef std::pair< const std::string, VertexBuffer* > IdVertexBuffer;
-        vertex_buffer_.insert(IdVertexBuffer(id, vertex_buffer));
-
-        std::vector< int > indexes;
-        data.copy_expanded_to_vector_at(&indexes, base_key + ".indexes");
-
-        const std::string uvs_key = base_key + ".uvs";
-
-        assert(data.does_exist(image_key) == data.does_exist(uvs_key));
-
-        std::vector< double > uvs;
-
-        if (data.does_exist(uvs_key))
-        {
-            data.copy_2expanded_to_vector_at(&uvs, uvs_key);
-        }
-
-        IndexBuffer* index_buffer = new IndexBuffer(indexes, uvs);
-        typedef std::pair< const std::string, IndexBuffer* > IdIndexBuffer;
-        index_buffer_.insert(IdIndexBuffer(id, index_buffer));
-
-        Batch* batch = new Batch(vertex_buffer, index_buffer, texture);
-        typedef std::pair< const std::string, Batch* > IdBatch;
-        batch_.insert(IdBatch(id, batch));
     }
 
-    const size_t trees_size = data.size_of("trees");
-
-    for (size_t i = 0; i < trees_size; ++i)
+    // read trees
     {
-        oss.str("");
-        oss << "trees." << i;
-        const std::string base_key = oss.str();
-        const std::string id = data.get_at(base_key + ".id");
+        const size_t trees_size = data.size_of("trees");
 
-        TreeTemplate* tree_template = new TreeTemplate(id);
-        NodeTemplate* root = new NodeTemplate(id);
-        tree_template->root(root);
-        append_children(root, data, base_key);
+        for (size_t i = 0; i < trees_size; ++i)
+        {
+            oss.str("");
+            oss << "trees." << i;
+            const std::string base_key = oss.str();
+            const std::string id = data.get_at(base_key + ".id");
 
-        typedef std::pair< const std::string, TreeTemplate* > IdTreeTemplate;
-        tree_template_.insert(IdTreeTemplate(id, tree_template));
+            TreeTemplate* tree_template = new TreeTemplate(id);
+            NodeTemplate* root = new NodeTemplate(id);
+            tree_template->root(root);
+            append_children(root, data, base_key);
+
+            typedef std::pair< const std::string, TreeTemplate* > IdTreeTemplate;
+            tree_template_.insert(IdTreeTemplate(id, tree_template));
+        }
     }
 }
 
