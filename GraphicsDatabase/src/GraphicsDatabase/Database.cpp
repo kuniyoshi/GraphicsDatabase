@@ -7,6 +7,7 @@
 #include "PseudoJson/Decoder.h"
 #include "PseudoJson/Data.h"
 #include "GameLib/Framework.h"
+#include "GraphicsDatabase/Animation.h"
 #include "GraphicsDatabase/Batch.h"
 #include "GraphicsDatabase/IndexBuffer.h"
 #include "GraphicsDatabase/Model.h"
@@ -47,6 +48,11 @@ void append_children(   NodeTemplate* parent,
         std::vector< double > position;
         data.copy_to_vector_at(&position, key + ".position");
         parent->position(position);
+    }
+
+    if (data.does_exist(key + ".animation"))
+    {
+        parent->animation_id(data.get_at(key + ".animation"));
     }
 
     if (!data.does_exist(key + ".children"))
@@ -147,6 +153,61 @@ Database::Database(const char* filename)
         }
     }
 
+    // read animations
+    {
+        const size_t animations_size = data.size_of("animations");
+
+        for (size_t i = 0; i < animations_size; ++i)
+        {
+            oss.str("");
+            oss << "animations." << i;
+            const std::string base_key = oss.str();
+            const std::string id = data.get_at(base_key + ".id");
+
+            Animation* animation = new Animation(id);
+
+            if (data.does_exist(base_key + ".angle"))
+            {
+                const std::string key = base_key + ".angle";
+                animation->period(data.get_double_at(key + ".period"));
+
+                const std::string method_key = key + ".completion";
+
+                if (data.does_exist(method_key))
+                {
+                    animation->completion_method(data.get_at(method_key));
+                }
+
+                const char axises[3] = { 'x', 'y', 'z' };
+
+                for (int i = 0; i < 3; ++i)
+                {
+                    const std::string axis_key = key + "." + axises[i];
+
+                    if (data.does_exist(axis_key))
+                    {
+                        std::vector< double > axis;
+                        data.copy_expanded_to_vector_at(&axis, axis_key);
+                        animation->angles(axises[i], axis);
+                    }
+                }
+            }
+
+            if (data.does_exist(base_key + ".position"))
+            {
+                // todo
+            }
+
+            if (data.does_exist(base_key + ".scale"))
+            {
+                // todo
+            }
+
+            typedef std::pair< const std::string, Animation* > IdAnimation;
+            animation_.insert(IdAnimation(id, animation));
+        }
+    }
+
     // read trees
     {
         const size_t trees_size = data.size_of("trees");
@@ -171,6 +232,14 @@ Database::Database(const char* filename)
 
 Database::~Database()
 {
+    std::map< const std::string, Animation* >::iterator animation_it
+    = animation_.begin();
+
+    for (; animation_it != animation_.end(); ++animation_it)
+    {
+        SAFE_DELETE(animation_it->second);
+    }
+
     std::map< const std::string, Tree* >::iterator tree_it
     = tree_.begin();
 
@@ -260,6 +329,11 @@ void Database::create_tree( const std::string& tree_id,
 Model* Database::find(const std::string& model_id) const
 {
     return model_.at(model_id);
+}
+
+Animation* Database::find_animation(const std::string& animation_id) const
+{
+    return animation_.at(animation_id);
 }
 
 Tree* Database::find_tree(const std::string& tree_id) const

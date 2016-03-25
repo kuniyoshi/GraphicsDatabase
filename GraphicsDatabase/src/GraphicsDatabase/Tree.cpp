@@ -1,18 +1,27 @@
 #include "GraphicsDatabase/Tree.h"
 #include <sstream>
 #include <string>
+#include <utility>
+#include <vector>
+#include "GraphicsDatabase/Animation.h"
 #include "GraphicsDatabase/Database.h"
 #include "GraphicsDatabase/Node.h"
 #include "GraphicsDatabase/NodeTemplate.h"
 #include "GraphicsDatabase/TreeTemplate.h"
 
+using std::pair;
+using std::vector;
+
 namespace GraphicsDatabase
 {
+
+typedef std::pair< Node*, const Animation* > NodeAnimation;
 
 namespace
 {
 
 void append_children(   Database* database,
+                        vector< NodeAnimation >* nodes_animations_pairs,
                         Node* parent,
                         const NodeTemplate& parent_template)
 {
@@ -25,6 +34,15 @@ void append_children(   Database* database,
     }
 
     parent->setup_model(parent_template);
+
+    const Animation* animation = 0;
+
+    if (parent_template.has_animation())
+    {
+        animation = database->find_animation(*parent_template.animation_id());
+    }
+
+    nodes_animations_pairs->push_back(NodeAnimation(parent, animation));
 
     size_t children_size = parent_template.children_size();
 
@@ -46,18 +64,27 @@ void append_children(   Database* database,
         parent->set_child(child, i);
 
         const NodeTemplate* child_template = parent_template.child(i);
-        append_children(database, child, *child_template);
+        append_children(    database,
+                            nodes_animations_pairs,
+                            child,
+                            *child_template);
     }
 }
 
 } // namespace -
 
 Tree::Tree(Database* database, const TreeTemplate* tree_template)
-:   root_(0), id_(*tree_template->id())
+:   time_(0), time_rate_(1.0), // max_animation_period_(0),
+    root_(0), id_(*tree_template->id()),
+    nodes_animations_pairs_()
 {
     const NodeTemplate* node_template = tree_template->root();
     root_ = new Node(id_);
-    append_children(database, root_, *node_template);
+    nodes_animations_pairs_.push_back(NodeAnimation(root_, 0));
+    append_children(    database,
+                        &nodes_animations_pairs_,
+                        root_,
+                        *node_template);
 }
 
 Tree::~Tree()
@@ -86,6 +113,24 @@ void Tree::draw_flat_shading(   const Matrix44& perspective_matrix,
                                 brightness,
                                 ambient_brightness,
                                 light_vector);
+}
+
+void Tree::update(unsigned delta_time)
+{
+    time_ += static_cast< unsigned >(static_cast< double >(delta_time) * time_rate_);
+    double now = static_cast< double >(time_) / 1000.0; // NOTE group when overflow
+
+    vector< NodeAnimation >::iterator it = nodes_animations_pairs_.begin();
+
+    for (; it != nodes_animations_pairs_.end(); ++it)
+    {
+        if (!it->second)
+        {
+            continue;
+        }
+
+        it->first->update(now, *it->second);
+    }
 }
 
 } // namespace GraphicsDatabase

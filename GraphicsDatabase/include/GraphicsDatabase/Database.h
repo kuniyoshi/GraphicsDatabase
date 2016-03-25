@@ -7,6 +7,7 @@ namespace GameLib { class Texture; }
 namespace GraphicsDatabase
 {
 
+class Animation;
 class Batch;
 class IndexBuffer;
 class Model;
@@ -17,6 +18,7 @@ class VertexBuffer;
 class Database
 {
 private:
+    std::map< const std::string, Animation* > animation_;
     std::map< const std::string, Batch* > batch_;
     std::map< const std::string, GameLib::Texture* > texture_;
     std::map< const std::string, IndexBuffer* > index_buffer_;
@@ -32,6 +34,7 @@ public:
     void create_tree(   const std::string& tree_id,
                         const std::string& template_id);
     Model* find(const std::string& model_id) const;
+    Animation* find_animation(const std::string& animation_id) const;
     Tree* find_tree(const std::string& tree_id) const;
 };
 

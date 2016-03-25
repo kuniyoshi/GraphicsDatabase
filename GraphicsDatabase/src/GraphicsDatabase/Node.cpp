@@ -1,6 +1,7 @@
 #include "GraphicsDatabase/Node.h"
 #include <cassert>
 #include <string>
+#include "GraphicsDatabase/Animation.h"
 #include "GraphicsDatabase/Matrix44.h"
 #include "GraphicsDatabase/Model.h"
 #include "GraphicsDatabase/NodeTemplate.h"
@@ -130,6 +131,24 @@ void Node::draw_flat_shading(   const Matrix44& perspective_matrix,
                                             brightness,
                                             ambient_brightness,
                                             light_vector);
+    }
+}
+
+void Node::update(double time, const Animation& animation)
+{
+    if (animation.has_scale_completion())
+    {
+        model_->scale(animation.scale_at(time));
+    }
+
+    if (animation.has_angle_completion())
+    {
+        model_->angle(animation.angle_at(time));
+    }
+
+    if (animation.has_position_completion())
+    {
+        model_->position(animation.position_at(time));
     }
 }
 

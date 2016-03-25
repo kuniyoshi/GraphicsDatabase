@@ -5,6 +5,7 @@
 namespace GraphicsDatabase
 {
 
+class Animation;
 class Matrix44;
 class Model;
 class NodeTemplate;
@@ -39,6 +40,7 @@ public:
                             const Vector3& brightness,
                             double ambient_brightness,
                             const Vector3& light_vector) const;
+    void update(double time, const Animation& animation);
 };
 
 } // namespace GraphicsDatabase

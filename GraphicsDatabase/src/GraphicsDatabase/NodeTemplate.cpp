@@ -8,6 +8,7 @@ namespace GraphicsDatabase
 NodeTemplate::NodeTemplate(const std::string& id)
 :   id_(id),
     model_id_(),
+    animation_id_(),
     children_(0), children_size_(0),
     scale_(1.0)
 {
@@ -41,6 +42,16 @@ const std::string* NodeTemplate::model_id() const { return &model_id_; }
 void NodeTemplate::model_id(const std::string& new_value)
 {
     model_id_ = new_value;
+}
+
+const std::string* NodeTemplate::animation_id() const
+{
+    return &animation_id_;
+}
+
+void NodeTemplate::animation_id(const std::string& new_value)
+{
+    animation_id_ = new_value;
 }
 
 size_t NodeTemplate::children_size() const { return children_size_; }
@@ -79,6 +90,8 @@ const NodeTemplate* NodeTemplate::child(int index) const
     assert(index >= 0 && static_cast< unsigned >(index) <= children_size_);
     return children_[index];
 }
+
+bool NodeTemplate::has_animation() const { return !!animation_id_.size(); }
 
 void NodeTemplate::reserve_children()
 {
