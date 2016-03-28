@@ -135,6 +135,10 @@ void Animation::completion_method(const std::string& method_id)
     {
         completion_method_ = TheCompletion::MethodLastOne;
     }
+    else if (method_id == "linear")
+    {
+        completion_method_ = TheCompletion::MethodLinear;
+    }
     else
     {
         completion_method_ = TheCompletion::MethodLastOne;

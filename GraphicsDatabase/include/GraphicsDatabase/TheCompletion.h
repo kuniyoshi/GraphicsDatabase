@@ -15,6 +15,7 @@ namespace TheCompletion
 enum Method
 {
     MethodLastOne,
+    MethodLinear,
 };
 
 double complete(    Method method,
