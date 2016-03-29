@@ -11,6 +11,22 @@ using std::pair;
 namespace GraphicsDatabase
 {
 
+namespace
+{
+
+int index_of(const char axis)
+{
+    switch (axis)
+    {
+        case 'x': return 0; break;
+        case 'y': return 1; break;
+        case 'z': return 2; break;
+        default: assert(false); break;
+    }
+}
+
+} // namespace -
+
 Animation::Animation(const std::string& id)
 :   id_(id),
     scale_completion_(0),
@@ -88,15 +104,7 @@ void Animation::angle_completions(  const std::string& completion_id,
         angle_completions_[2] = 0;
     }
 
-    int index = 0;
-
-    switch (axis)
-    {
-        case 'x': index = 0; break;
-        case 'y': index = 1; break;
-        case 'z': index = 2; break;
-        default: assert(false); break;
-    }
+    int index = index_of(axis);
 
     assert(!angle_completions_[index]);
 
@@ -125,15 +133,7 @@ void Animation::position_completions(   const std::string& completion_id,
         position_completions_[2] = 0;
     }
 
-    int index = 0;
-
-    switch (axis)
-    {
-        case 'x': index = 0; break;
-        case 'y': index = 1; break;
-        case 'z': index = 2; break;
-        default: assert(false); break;
-    }
+    int index = index_of(axis);
 
     assert(!position_completions_[index]);
 
