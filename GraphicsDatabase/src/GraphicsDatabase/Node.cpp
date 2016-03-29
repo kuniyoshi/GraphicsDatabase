@@ -145,13 +145,13 @@ void Node::update(const double time, const Animation& animation)
         model_->scale(scale);
     }
 
-    if (animation.has_angle_completion())
+    if (animation.has_angle_completions())
     {
         animation.angle_at(&value, time);
         model_->angle(value);
     }
 
-    if (animation.has_position_completion())
+    if (animation.has_position_completions())
     {
         animation.position_at(&value, time);
         model_->position(value);

@@ -184,7 +184,7 @@ Database::Database(const char* filename)
                         const double period = data.get_double_at(period_key);
                         std::vector< double > axis;
                         data.copy_expanded_to_vector_at(&axis, points_key);
-                        animation->angle_completion(    completion_id,
+                        animation->angle_completions(   completion_id,
                                                         axises[i],
                                                         axis,
                                                         period);

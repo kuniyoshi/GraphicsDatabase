@@ -14,8 +14,8 @@ namespace GraphicsDatabase
 Animation::Animation(const std::string& id)
 :   id_(id),
     scale_completion_(0),
-    angle_completion_(0),
-    position_completion_(0)
+    angle_completions_(0),
+    position_completions_(0)
 {}
 
 Animation::~Animation()
@@ -26,34 +26,34 @@ Animation::~Animation()
         scale_completion_ = 0;
     }
 
-    if (angle_completion_)
+    if (angle_completions_)
     {
         for (int i = 0; i < 3; ++i)
         {
-            if (angle_completion_[i])
+            if (angle_completions_[i])
             {
-                delete angle_completion_[i];
-                angle_completion_[i] = 0;
+                delete angle_completions_[i];
+                angle_completions_[i] = 0;
             }
         }
 
-        delete[] angle_completion_;
-        angle_completion_ = 0;
+        delete[] angle_completions_;
+        angle_completions_ = 0;
     }
 
-    if (position_completion_)
+    if (position_completions_)
     {
         for (int i = 0; i < 3; ++i)
         {
-            if (position_completion_[i])
+            if (position_completions_[i])
             {
-                delete position_completion_[i];
-                position_completion_[i] = 0;
+                delete position_completions_[i];
+                position_completions_[i] = 0;
             }
         }
 
-        delete[] position_completion_;
-        position_completion_= 0;
+        delete[] position_completions_;
+        position_completions_= 0;
     }
 }
 
@@ -73,19 +73,19 @@ bool Animation::has_scale_completion() const
     return !!scale_completion_;
 }
 
-void Animation::angle_completion(   const std::string& completion_id,
+void Animation::angle_completions(  const std::string& completion_id,
                                     const char axis,
                                     const std::vector< double >& angles,
                                     const double period)
 {
     assert((angles.size() % 2) == 0);
 
-    if (!angle_completion_)
+    if (!angle_completions_)
     {
-        angle_completion_ = new Completion*[3];
-        angle_completion_[0] = 0;
-        angle_completion_[1] = 0;
-        angle_completion_[2] = 0;
+        angle_completions_ = new Completion*[3];
+        angle_completions_[0] = 0;
+        angle_completions_[1] = 0;
+        angle_completions_[2] = 0;
     }
 
     int index = 0;
@@ -98,31 +98,31 @@ void Animation::angle_completion(   const std::string& completion_id,
         default: assert(false); break;
     }
 
-    assert(!angle_completion_[index]);
+    assert(!angle_completions_[index]);
 
-    angle_completion_[index] = new Completion(  completion_id,
+    angle_completions_[index] = new Completion( completion_id,
                                                 angles,
                                                 period);
 }
 
-bool Animation::has_angle_completion() const
+bool Animation::has_angle_completions() const
 {
-    return !!angle_completion_;
+    return !!angle_completions_;
 }
 
-void Animation::position_completion(    const std::string& completion_id,
+void Animation::position_completions(   const std::string& completion_id,
                                         char axis,
                                         const std::vector< double >& positions,
                                         const double period)
 {
     assert((positions.size() % 2) == 0);
 
-    if (!position_completion_)
+    if (!position_completions_)
     {
-        position_completion_ = new Completion*[3];
-        position_completion_[0] = 0;
-        position_completion_[1] = 0;
-        position_completion_[2] = 0;
+        position_completions_ = new Completion*[3];
+        position_completions_[0] = 0;
+        position_completions_[1] = 0;
+        position_completions_[2] = 0;
     }
 
     int index = 0;
@@ -135,16 +135,16 @@ void Animation::position_completion(    const std::string& completion_id,
         default: assert(false); break;
     }
 
-    assert(!position_completion_[index]);
+    assert(!position_completions_[index]);
 
-    position_completion_[index] = new Completion(   completion_id,
+    position_completions_[index] = new Completion(  completion_id,
                                                     positions,
                                                     period);
 }
 
-bool Animation::has_position_completion() const
+bool Animation::has_position_completions() const
 {
-    return !!position_completion_;
+    return !!position_completions_;
 }
 
 void Animation::scale_at(double* scale, const double time) const
@@ -155,28 +155,28 @@ void Animation::scale_at(double* scale, const double time) const
 
 void Animation::angle_at(Vector3* angle, const double time) const
 {
-    assert(angle_completion_);
+    assert(angle_completions_);
 
     for (int i = 0; i < 3; ++i)
     {
-        if (angle_completion_[i])
+        if (angle_completions_[i])
         {
             double* completed = &(angle->x);
-            angle_completion_[i]->complete(&(completed[i]), time);
+            angle_completions_[i]->complete(&(completed[i]), time);
         }
     }
 }
 
 void Animation::position_at(Vector3* position, const double time) const
 {
-    assert(position_completion_);
+    assert(position_completions_);
 
     for (int i = 0; i < 3; ++i)
     {
-        if (position_completion_[i])
+        if (position_completions_[i])
         {
             double* completed = &(position->x);
-            position_completion_[i]->complete(&(completed[i]), time);
+            position_completions_[i]->complete(&(completed[i]), time);
         }
     }
 }

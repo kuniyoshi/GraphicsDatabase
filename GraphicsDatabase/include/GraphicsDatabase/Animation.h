@@ -14,8 +14,8 @@ class Animation
 private:
     const std::string id_;
     Completion* scale_completion_;
-    Completion** angle_completion_;
-    Completion** position_completion_;
+    Completion** angle_completions_;
+    Completion** position_completions_;
 
 public:
     Animation(const std::string& id);
@@ -24,16 +24,16 @@ public:
                             const std::vector< double >& scales,
                             const double period);
     bool has_scale_completion() const;
-    void angle_completion(  const std::string& completion_id,
+    void angle_completions( const std::string& completion_id,
                             const char axis,
                             const std::vector< double >& angles,
                             const double period);
-    bool has_angle_completion() const;
-    void position_completion(   const std::string& completion_id,
+    bool has_angle_completions() const;
+    void position_completions(  const std::string& completion_id,
                                 const char axis,
                                 const std::vector< double >& positions,
                                 const double period);
-    bool has_position_completion() const;
+    bool has_position_completions() const;
 
     void scale_at(double* scale, const double time) const;
     void angle_at(Vector3* angle, const double time) const;
