@@ -1,8 +1,5 @@
 #include "GraphicsDatabase/TheCompletion.h"
-#include <utility>
-#include "GraphicsDatabase/Vector3.h"
-
-using std::pair;
+#include <cassert>
 
 namespace GraphicsDatabase
 {
@@ -13,204 +10,106 @@ namespace TheCompletion
 namespace
 {
 
-void complete_last_one( double* value,
-                        double rate,
-                        const pair< double, double >* points,
-                        size_t size)
+// t_and_data = [[t, point], [t, point], ...]
+void complete_last_one( double* completed,
+                        const double rate,
+                        const double* t_and_data,
+                        const size_t size)
 {
     size_t index = 0;
-    *value = points[0].second;
+    *completed = t_and_data[1];
 
-    for (size_t i = 1; i < size; ++i)
+    for (size_t i = 2; i < size; i += 2)
     {
-        if (points[i].first >= rate)
+        if (t_and_data[i] >= rate)
         {
-            *value = points[i - 1].second;
-            break;
+            *completed = t_and_data[i + 1];
+            return;
         }
     }
 }
 
 void complete_linear(   double* value,
-                        double rate,
-                        const pair< double, double >* points,
-                        size_t size)
+                        const double rate,
+                        const double* t_and_data,
+                        const size_t size)
 {
-    if (rate == points[0].first)
+    if (rate == t_and_data[0])
     {
-        *value = points[0].second;
+        *value = t_and_data[0 + 1];
         return;
     }
 
     // loop completion
-    if (rate < points[0].first)
+    if (rate < t_and_data[0])
     {
-        const double lsat_to_end = 1.0 - points[size - 1].first;
-        const double dt = lsat_to_end + points[0].first;
-        const double t = (lsat_to_end + rate) / dt;
-        const double da = points[0].second - points[size - 1].second;
-        *value= points[size - 1].second
-        + (points[0].second - points[size - 1].second) * t;
+        const double t0 = t_and_data[size - 2];
+        const double t1 = t_and_data[0];
+        const double a0 = t_and_data[size - 1];
+        const double a1 = t_and_data[1];
+        const double dt = (1.0 - t0 + rate) / (1.0 - t0 + t1);
+        const double da = a1 - a0;
+        *value = a0 + da * dt;
         return;
     }
 
-    for (size_t i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; i += 2)
     {
-        if (points[i].first == rate)
+        if (t_and_data[i] > rate)
         {
-            *value = points[i].second;
-            return;
-        }
-
-        if (points[i].first > rate)
-        {
-            const double dt = points[i].first - points[i - 1].first;
-            const double t = (rate - points[i - 1].first) / dt;
-            const double da = points[i].second - points[i - 1].second;
-            * value = points[i - 1].second + da * t;
+            const double t0 = t_and_data[i - 2];
+            const double t1 = t_and_data[i];
+            const double a0 = t_and_data[i - 1];
+            const double a1 = t_and_data[i + 1];
+            const double dt = (rate - t0) / (t1 - t0);
+            const double da = a1 - a0;
+            *value = a0 + da * dt;
             return;
         }
     }
 
     // loop completion
-    const double dt = (1.0 - points[size - 1].first) + points[0].first;
-    const double t = (rate - points[size - 1].first) / dt;
-    const double da = points[0].second - points[size - 1].second;
-    *value = points[size - 1].second + da * t;
-    return;
-}
-
-void complete_last_one( Vector3* value,
-                        double rate,
-                        const pair< double, Vector3 >* points,
-                        size_t size)
-{
-    size_t index = 0;
-    value->copy_from(points[0].second);
-
-    for (size_t i = 1; i < size; ++i)
-    {
-        if (points[i].first >= rate)
-        {
-            value->copy_from(points[i - 1].second);
-            break;
-        }
-    }
-}
-
-void complete_linear_one(   Vector3* value,
-                            double t,
-                            const Vector3& from,
-                            const Vector3& to)
-{
-    value->x = from.x + (to.x - from.x) * t;
-    value->y = from.y + (to.y - from.y) * t;
-    value->z = from.z + (to.z - from.z) * t;
-}
-
-void complete_linear(   Vector3* value,
-                        double rate,
-                        const pair< double, Vector3 >* points,
-                        size_t size)
-{
-    if (rate == points[0].first)
-    {
-        value->copy_from(points[0].second);
-    }
-
-    // loop completion
-    if (rate < points[0].first)
-    {
-        const double lsat_to_end = 1.0 - points[size - 1].first;
-        const double dt = lsat_to_end + points[0].first;
-        const double t = (lsat_to_end + rate) / dt;
-        complete_linear_one(    value,
-                                t,
-                                points[size - 1].second,
-                                points[0].second);
-        return;
-    }
-
-    for (size_t i = 1; i < size; ++i)
-    {
-        if (points[i].first == rate)
-        {
-            value->copy_from(points[i].second);
-            return;
-        }
-
-        if (points[i].first > rate)
-        {
-            const double dt = points[i].first - points[i - 1].first;
-            const double t = (rate - points[i - 1].first) / dt;
-            complete_linear_one(    value,
-                                    t,
-                                    points[i - 1].second,
-                                    points[i].second);
-            return;
-        }
-    }
-
-    // loop completion
-    const double dt = 1.0 - points[size - 1].first + points[0].first;
-    const double t = (1.0 - rate) / dt;
-    complete_linear_one(    value,
-                            t,
-                            points[size - 1].second,
-                            points[0].second);
+    const double t0 = t_and_data[size - 2];
+    const double t1 = t_and_data[0];
+    const double a0 = t_and_data[size - 1];
+    const double a1 = t_and_data[1];
+    const double dt = (1.0 - rate) / (1.0 - t0 + t1);
+    const double da = a1 - a0;
+    *value = a0 + da * dt;
     return;
 }
 
 } // namespace -
 
-double complete(    Method method,
-                    double rate,
-                    const pair< double, double >* points,
-                    size_t size)
+void complete(  double* completed,
+                const Method method,
+                const double rate,
+                const double* t_and_data,
+                const size_t total_size,
+                const size_t size_per_t)
 {
-    double value;
+    assert(rate >= 0.0 && rate <= 1.0);
 
     switch (method)
     {
         case MethodLastOne:
-        complete_last_one(&value, rate, points, size);
+        complete_last_one(  completed,
+                            rate,
+                            t_and_data,
+                            total_size);
+        return;
         break;
 
         case MethodLinear:
-        complete_linear(&value, rate, points, size);
-        break;
-
-        default:
-        complete_last_one(&value, rate, points, size);
-        break;
-    }
-
-    return value;
-}
-
-Vector3 complete(   Method method,
-                    double rate,
-                    const pair< double, Vector3 >* points,
-                    size_t size)
-{
-    Vector3 value;
-
-    switch (method)
-    {
-        case MethodLastOne:
-        complete_last_one(&value, rate, points, size);
-        break;
-
-        case MethodLinear:
-        complete_linear(&value, rate, points, size);
-        break;
-
-        default:
-        complete_last_one(&value, rate, points, size);
+        complete_linear(    completed,
+                            rate,
+                            t_and_data,
+                            total_size);
+        return;
         break;
     }
 
-    return value;
+    assert(false);
 }
 
 } // namespace TheCompletion

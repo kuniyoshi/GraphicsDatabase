@@ -134,21 +134,27 @@ void Node::draw_flat_shading(   const Matrix44& perspective_matrix,
     }
 }
 
-void Node::update(double time, const Animation& animation)
+void Node::update(const double time, const Animation& animation)
 {
+    double scale = 1.0;
+    Vector3 value;
+
     if (animation.has_scale_completion())
     {
-        model_->scale(animation.scale_at(time));
+        animation.scale_at(&scale, time);
+        model_->scale(scale);
     }
 
     if (animation.has_angle_completion())
     {
-        model_->angle(animation.angle_at(time));
+        animation.angle_at(&value, time);
+        model_->angle(value);
     }
 
     if (animation.has_position_completion())
     {
-        model_->position(animation.position_at(time));
+        animation.position_at(&value, time);
+        model_->position(value);
     }
 }
 

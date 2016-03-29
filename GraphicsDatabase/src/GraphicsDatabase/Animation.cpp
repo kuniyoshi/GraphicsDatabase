@@ -1,9 +1,8 @@
 #include "GraphicsDatabase/Animation.h"
 #include <cassert>
-#include <cmath>
 #include <string>
-#include <utility>
 #include <vector>
+#include "GraphicsDatabase/Completion.h"
 #include "GraphicsDatabase/TheCompletion.h"
 #include "GraphicsDatabase/Vector3.h"
 
@@ -14,67 +13,79 @@ namespace GraphicsDatabase
 
 Animation::Animation(const std::string& id)
 :   id_(id),
-    period_(1.0),
-    scales_(0), scales_size_(0),
-    angles_(0), angles_size_(0),
-    positions_(0), positions_size_(0),
-    completion_method_(TheCompletion::MethodLastOne)
+    scale_completion_(0),
+    angle_completion_(0),
+    position_completion_(0)
 {}
 
 Animation::~Animation()
 {
-    if (scales_)
+    if (scale_completion_)
     {
-        delete[] scales_;
-        scales_ = 0;
+        delete scale_completion_;
+        scale_completion_ = 0;
     }
 
-    if (angles_)
+    if (angle_completion_)
     {
-        delete[] angles_;
-        angles_ = 0;
+        for (int i = 0; i < 3; ++i)
+        {
+            if (angle_completion_[i])
+            {
+                delete angle_completion_[i];
+                angle_completion_[i] = 0;
+            }
+        }
+
+        delete[] angle_completion_;
+        angle_completion_ = 0;
     }
 
-    if (positions_)
+    if (position_completion_)
     {
-        delete[] positions_;
-        positions_ = 0;
+        for (int i = 0; i < 3; ++i)
+        {
+            if (position_completion_[i])
+            {
+                delete position_completion_[i];
+                position_completion_[i] = 0;
+            }
+        }
+
+        delete[] position_completion_;
+        position_completion_= 0;
     }
 }
 
-void Animation::period(double new_value)
-{
-    period_ = new_value;
-}
-
-void Animation::scales(const std::vector< double >& scales)
+void Animation::scale_completion(   const std::string& completion_id,
+                                    const std::vector< double >& scales,
+                                    const double period)
 {
     assert((scales.size() % 2) == 0);
-    assert(!scales_);
-    scales_size_ = scales.size() / 2;
-    scales_ = new pair< double, double >[scales_size_];
-
-    for (size_t i = 0; i < scales_size_; ++i)
-    {
-        scales_[i].first = scales[2 * i];
-        scales_[i].second = scales[2 * i + 1];
-    }
+    assert(!scale_completion_);
+    scale_completion_ = new Completion( completion_id,
+                                        scales,
+                                        period);
 }
 
-void Animation::angles(char axis, const std::vector< double >& angles)
+bool Animation::has_scale_completion() const
+{
+    return !!scale_completion_;
+}
+
+void Animation::angle_completion(   const std::string& completion_id,
+                                    const char axis,
+                                    const std::vector< double >& angles,
+                                    const double period)
 {
     assert((angles.size() % 2) == 0);
 
-    if (!angles_size_)
+    if (!angle_completion_)
     {
-        angles_size_ = angles.size() / 2;
-    }
-
-    assert((angles.size() / 2) == angles_size_);
-
-    if (!angles_)
-    {
-        angles_ = new pair< double, Vector3 >[angles_size_];
+        angle_completion_ = new Completion*[3];
+        angle_completion_[0] = 0;
+        angle_completion_[1] = 0;
+        angle_completion_[2] = 0;
     }
 
     int index = 0;
@@ -87,28 +98,31 @@ void Animation::angles(char axis, const std::vector< double >& angles)
         default: assert(false); break;
     }
 
-    for (size_t i = 0; i < angles_size_; ++i)
-    {
-        angles_[i].first = angles[2 * i];
-        double* xyz = &(angles_[i].second.x);
-        xyz[index] = angles[2 * i + 1];
-    }
+    assert(!angle_completion_[index]);
+
+    angle_completion_[index] = new Completion(  completion_id,
+                                                angles,
+                                                period);
 }
 
-void Animation::positions(char axis, const std::vector< double >& positions)
+bool Animation::has_angle_completion() const
+{
+    return !!angle_completion_;
+}
+
+void Animation::position_completion(    const std::string& completion_id,
+                                        char axis,
+                                        const std::vector< double >& positions,
+                                        const double period)
 {
     assert((positions.size() % 2) == 0);
 
-    if (!positions_size_)
+    if (!position_completion_)
     {
-        positions_size_ = positions.size() / 2;
-    }
-
-    assert((positions.size() / 2) == positions_size_);
-
-    if (!positions_)
-    {
-        positions_ = new pair< double, Vector3 >[positions_size_];
+        position_completion_ = new Completion*[3];
+        position_completion_[0] = 0;
+        position_completion_[1] = 0;
+        position_completion_[2] = 0;
     }
 
     int index = 0;
@@ -116,66 +130,55 @@ void Animation::positions(char axis, const std::vector< double >& positions)
     switch (axis)
     {
         case 'x': index = 0; break;
-        case 'y': index = 0; break;
-        case 'z': index = 0; break;
+        case 'y': index = 1; break;
+        case 'z': index = 2; break;
         default: assert(false); break;
     }
 
-    for (size_t i = 0; i < positions_size_; ++i)
+    assert(!position_completion_[index]);
+
+    position_completion_[index] = new Completion(   completion_id,
+                                                    positions,
+                                                    period);
+}
+
+bool Animation::has_position_completion() const
+{
+    return !!position_completion_;
+}
+
+void Animation::scale_at(double* scale, const double time) const
+{
+    assert(scale_completion_);
+    scale_completion_->complete(scale, time);
+}
+
+void Animation::angle_at(Vector3* angle, const double time) const
+{
+    assert(angle_completion_);
+
+    for (int i = 0; i < 3; ++i)
     {
-        positions_[i].first = positions[2 * i];
-        double *xyz = &(positions_[i].second.x);
-        xyz[index] = positions[2 * i + 1];
+        if (angle_completion_[i])
+        {
+            double* completed = &(angle->x);
+            angle_completion_[i]->complete(&(completed[i]), time);
+        }
     }
 }
 
-void Animation::completion_method(const std::string& method_id)
+void Animation::position_at(Vector3* position, const double time) const
 {
-    if (method_id == "last_one")
+    assert(position_completion_);
+
+    for (int i = 0; i < 3; ++i)
     {
-        completion_method_ = TheCompletion::MethodLastOne;
-    }
-    else if (method_id == "linear")
-    {
-        completion_method_ = TheCompletion::MethodLinear;
-    }
-    else
-    {
-        completion_method_ = TheCompletion::MethodLastOne;
+        if (position_completion_[i])
+        {
+            double* completed = &(position->x);
+            position_completion_[i]->complete(&(completed[i]), time);
+        }
     }
 }
-
-double Animation::scale_at(double time) const
-{
-    double rate = std::fmod(time, period_) / period_;
-    return TheCompletion::complete( completion_method_,
-                                    rate,
-                                    scales_,
-                                    scales_size_);
-}
-
-Vector3 Animation::angle_at(double time) const
-{
-    double rate = std::fmod(time, period_) / period_;
-    return TheCompletion::complete( completion_method_,
-                                    rate,
-                                    angles_,
-                                    angles_size_);
-}
-
-Vector3 Animation::position_at(double time) const
-{
-    double rate = std::fmod(time, period_) / period_;
-    return TheCompletion::complete( completion_method_,
-                                    rate,
-                                    positions_,
-                                    positions_size_);
-}
-
-bool Animation::has_scale_completion() const { return !!scales_; }
-
-bool Animation::has_angle_completion() const { return !!angles_; }
-
-bool Animation::has_position_completion() const { return !!positions_; }
 
 } // namespace GraphicsDatabase

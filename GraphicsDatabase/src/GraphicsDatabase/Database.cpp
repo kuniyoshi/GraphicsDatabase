@@ -169,15 +169,6 @@ Database::Database(const char* filename)
             if (data.does_exist(base_key + ".angle"))
             {
                 const std::string key = base_key + ".angle";
-                animation->period(data.get_double_at(key + ".period"));
-
-                const std::string method_key = key + ".completion";
-
-                if (data.does_exist(method_key))
-                {
-                    animation->completion_method(data.get_at(method_key));
-                }
-
                 const char axises[3] = { 'x', 'y', 'z' };
 
                 for (int i = 0; i < 3; ++i)
@@ -186,9 +177,17 @@ Database::Database(const char* filename)
 
                     if (data.does_exist(axis_key))
                     {
+                        const std::string method_key = axis_key + ".completion";
+                        const std::string period_key = axis_key + ".period";
+                        const std::string points_key = axis_key + ".points";
+                        const std::string completion_id = data.get_at(method_key);
+                        const double period = data.get_double_at(period_key);
                         std::vector< double > axis;
-                        data.copy_expanded_to_vector_at(&axis, axis_key);
-                        animation->angles(axises[i], axis);
+                        data.copy_expanded_to_vector_at(&axis, points_key);
+                        animation->angle_completion(    completion_id,
+                                                        axises[i],
+                                                        axis,
+                                                        period);
                     }
                 }
             }

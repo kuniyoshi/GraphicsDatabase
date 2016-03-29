@@ -18,15 +18,12 @@ enum Method
     MethodLinear,
 };
 
-double complete(    Method method,
-                    double rate,
-                    const pair< double, double >* points,
-                    size_t size);
-
-Vector3 complete(   Method method,
-                    double rate,
-                    const pair< double, Vector3 >* points,
-                    size_t size);
+void complete(  double* completed,
+                const Method method,
+                const double rate,
+                const double* t_and_data,
+                const size_t total_size,
+                const size_t size_per_t);
 
 } // namespace TheCompletion
 
