@@ -109,7 +109,7 @@ void complete(  double* completed,
         break;
     }
 
-    assert(false);
+    assert(!"Unknown method found.");
 }
 
 } // namespace TheCompletion

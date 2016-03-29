@@ -23,18 +23,19 @@ TheCompletion::Method get_method_from_id(const std::string& id)
         return TheCompletion::MethodLinear;
     }
 
-    assert(false);
+    assert(!"Unknown method id found.");
 }
 
 size_t get_chunk_size(const TheCompletion::Method method)
 {
     switch (method)
     {
-        case TheCompletion::MethodLastOne: return 2; break;
-        case TheCompletion::MethodLinear: return 2; break;
+        case TheCompletion::MethodLastOne: return 1; break;
+        case TheCompletion::MethodLinear: return 1; break;
+        default: assert(!"Unknown method found."); break;
     }
 
-    assert(false);
+    assert(!"Unknown method found.");
 }
 
 } // namespace -

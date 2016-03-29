@@ -21,7 +21,7 @@ int index_of(const char axis)
         case 'x': return 0; break;
         case 'y': return 1; break;
         case 'z': return 2; break;
-        default: assert(false); break;
+        default: assert(!"Unknown axis found."); break;
     }
 }
 
