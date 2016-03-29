@@ -172,6 +172,7 @@
     <ClCompile Include="src\GraphicsDatabase\Animation.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Batch.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Camera.cpp" />
+    <ClCompile Include="src\GraphicsDatabase\Completion.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Database.cpp" />
     <ClCompile Include="src\GraphicsDatabase\Drawer.cpp" />
     <ClCompile Include="src\GraphicsDatabase\IndexBuffer.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="include\GraphicsDatabase\Animation.h" />
     <ClInclude Include="include\GraphicsDatabase\Batch.h" />
     <ClInclude Include="include\GraphicsDatabase\Camera.h" />
+    <ClInclude Include="include\GraphicsDatabase\Completion.h" />
     <ClInclude Include="include\GraphicsDatabase\Database.h" />
     <ClInclude Include="include\GraphicsDatabase\Drawer.h" />
     <ClInclude Include="include\GraphicsDatabase\IndexBuffer.h" />

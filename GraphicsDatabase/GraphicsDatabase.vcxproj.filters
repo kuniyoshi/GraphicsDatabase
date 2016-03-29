@@ -66,6 +66,9 @@
     <ClCompile Include="src\GraphicsDatabase\TheCompletion.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\GraphicsDatabase\Completion.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\GraphicsDatabase\Batch.h">
@@ -114,6 +117,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="include\GraphicsDatabase\TheCompletion.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GraphicsDatabase\Completion.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
