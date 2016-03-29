@@ -147,6 +147,16 @@ bool Animation::has_position_completions() const
     return !!position_completions_;
 }
 
+void Animation::apply_speed_to_angle(   const char axis,
+                                        const double t,
+                                        const double speed)
+{
+    assert(angle_completions_);
+    int index = index_of(axis);
+    assert(angle_completions_[index]);
+    angle_completions_[index]->transform_polynomial2(t, speed);
+}
+
 void Animation::scale_at(double* scale, const double time) const
 {
     assert(scale_completion_);

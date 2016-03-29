@@ -35,6 +35,9 @@ public:
                                 const double period);
     bool has_position_completions() const;
 
+    void apply_speed_to_angle(  const char axis,
+                                const double t,
+                                const double speed);
     void scale_at(double* scale, const double time) const;
     void angle_at(Vector3* angle, const double time) const;
     void position_at(Vector3* position, const double time) const;

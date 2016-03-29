@@ -188,6 +188,16 @@ Database::Database(const char* filename)
                                                         axises[i],
                                                         axis,
                                                         period);
+
+                        if (completion_id == "polynomial2")
+                        {
+                            const std::string s0_key = axis_key + ".speed_at";
+                            std::vector< double > speed_at;
+                            data.copy_to_vector_at(&speed_at, s0_key);
+                            animation->apply_speed_to_angle(    axises[i],
+                                                                speed_at[0],
+                                                                speed_at[1]);
+                        }
                     }
                 }
             }

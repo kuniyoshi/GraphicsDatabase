@@ -16,6 +16,7 @@ enum Method
 {
     MethodLastOne,
     MethodLinear,
+    MethodPolynomial2,
 };
 
 void complete(  double* completed,

@@ -79,6 +79,30 @@ void complete_linear(   double* value,
     return;
 }
 
+// [[t, a, b, c], ...]
+void complete_polynomial2(  double* completed,
+                            const double rate,
+                            const double* t_and_data,
+                            const size_t size)
+{
+    const size_t t_size = size / 4;
+
+    for (size_t i = 0; i < t_size; ++i)
+    {
+        const double* a_data = &(t_and_data[4 * i]);
+
+        if (a_data[0] > rate)
+        {
+            const double* previous_data = &(t_and_data[4 * (i - 1)]);
+            const double a = previous_data[1];
+            const double b = previous_data[2];
+            const double c = previous_data[3];
+            *completed = a + b * rate + c * rate * rate;
+            return;
+        }
+    }
+}
+
 } // namespace -
 
 void complete(  double* completed,
@@ -105,6 +129,14 @@ void complete(  double* completed,
                             rate,
                             t_and_data,
                             total_size);
+        return;
+        break;
+
+        case MethodPolynomial2:
+        complete_polynomial2(   completed,
+                                rate,
+                                t_and_data,
+                                total_size);
         return;
         break;
     }

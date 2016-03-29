@@ -24,6 +24,7 @@ public:
                 const double period);
     ~Completion();
     void complete(double* completed, const double t) const;
+    void transform_polynomial2(const double t, const double speed);
 };
 
 } // namespace GraphicsDatabase
