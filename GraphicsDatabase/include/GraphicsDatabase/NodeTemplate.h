@@ -14,7 +14,7 @@ private:
     std::string animation_id_;
     NodeTemplate** children_;
     size_t children_size_;
-    double scale_;
+    double scale_[3];
     double angle_[3];
     double position_[3];
 
@@ -28,8 +28,8 @@ public:
     void animation_id(const std::string& new_value);
     size_t children_size() const;
     void children_size(int new_value);
-    double scale() const;
-    void scale(double new_value);
+    const double* scale() const;
+    void scale(const std::vector< double >& scale);
     const double* angle() const;
     void angle(const std::vector< double >& angle);
     const double* position() const;

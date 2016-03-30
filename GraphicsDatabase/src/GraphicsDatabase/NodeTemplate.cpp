@@ -9,8 +9,7 @@ NodeTemplate::NodeTemplate(const std::string& id)
 :   id_(id),
     model_id_(),
     animation_id_(),
-    children_(0), children_size_(0),
-    scale_(1.0)
+    children_(0), children_size_(0)
 {
     position_[0] = 0.0;
     position_[1] = 0.0;
@@ -18,6 +17,9 @@ NodeTemplate::NodeTemplate(const std::string& id)
     angle_[0] = 0.0;
     angle_[1] = 0.0;
     angle_[2] = 0.0;
+    scale_[0] = 1.0;
+    scale_[1] = 1.0;
+    scale_[2] = 1.0;
 }
 
 NodeTemplate::~NodeTemplate()
@@ -63,9 +65,14 @@ void NodeTemplate::children_size(int new_value)
     children_size_ = new_value;
 }
 
-double NodeTemplate::scale() const { return scale_; }
+const double* NodeTemplate::scale() const { return scale_; }
 
-void NodeTemplate::scale(double new_value) { scale_ = new_value; }
+void NodeTemplate::scale(const std::vector< double >& scale)
+{
+    scale_[0] = scale.at(0);
+    scale_[1] = scale.at(1);
+    scale_[2] = scale.at(2);
+}
 
 const double* NodeTemplate::angle() const { return angle_; }
 

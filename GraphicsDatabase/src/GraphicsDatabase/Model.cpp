@@ -10,14 +10,14 @@ Model::Model()
 :   batch_(0),
     position_(),
     angle_(),
-    scale_(1.0)
+    scale_()
 {}
 
 Model::Model(Batch* batch)
 :   batch_(batch),
     position_(),
     angle_(),
-    scale_(1.0)
+    scale_()
 {}
 
 Model::~Model() {}
@@ -33,15 +33,25 @@ const Vector3* Model::angle() const { return &angle_; }
 
 void Model::angle(const Vector3& new_value) { angle_.copy_from(new_value); }
 
-double Model::scale() const { return scale_; }
+const Vector3* Model::scale() const { return &scale_; }
 
-void Model::scale(double new_value) { scale_ = new_value; }
+void Model::scale(double scale)
+{
+    scale_.x = scale;
+    scale_.y = scale;
+    scale_.z = scale;
+}
+
+void Model::scale(const Vector3& new_value)
+{
+    scale_ = new_value;
+}
 
 namespace
 {
 
 void make_world_matrix( Matrix44* world_matrix,
-                        const double scale,
+                        const Vector3& scale,
                         const Vector3& angle,
                         const Vector3& position)
 {

@@ -29,17 +29,26 @@ int index_of(const char axis)
 
 Animation::Animation(const std::string& id)
 :   id_(id),
-    scale_completion_(0),
+    scale_completions_(0),
     angle_completions_(0),
     position_completions_(0)
 {}
 
 Animation::~Animation()
 {
-    if (scale_completion_)
+    if (scale_completions_)
     {
-        delete scale_completion_;
-        scale_completion_ = 0;
+        for (int i = 0; i < 3; ++i)
+        {
+            if (scale_completions_[i])
+            {
+                delete scale_completions_[i];
+                scale_completions_[i] = 0;
+            }
+        }
+
+        delete[] scale_completions_;
+        scale_completions_ = 0;
     }
 
     if (angle_completions_)
@@ -73,20 +82,31 @@ Animation::~Animation()
     }
 }
 
-void Animation::scale_completion(   const std::string& completion_id,
+void Animation::scale_completions(  const std::string& completion_id,
+                                    const char axis,
                                     const std::vector< double >& scales,
                                     const double period)
 {
-    assert((scales.size() % 2) == 0);
-    assert(!scale_completion_);
-    scale_completion_ = new Completion( completion_id,
-                                        scales,
-                                        period);
+    if (!scale_completions_)
+    {
+        scale_completions_ = new Completion*[3];
+        scale_completions_[0] = 0;
+        scale_completions_[1] = 0;
+        scale_completions_[2] = 0;
+    }
+
+    int index = index_of(axis);
+
+    assert(!scale_completions_[index]);
+
+    scale_completions_[index] = new Completion( completion_id,
+                                                scales,
+                                                period);
 }
 
-bool Animation::has_scale_completion() const
+bool Animation::has_scale_completions() const
 {
-    return !!scale_completion_;
+    return !!scale_completions_;
 }
 
 void Animation::angle_completions(  const std::string& completion_id,
@@ -155,10 +175,18 @@ void Animation::apply_speed_to_angle(   const char axis,
     angle_completions_[index]->transform_polynomial2(t, speed);
 }
 
-void Animation::scale_at(double* scale, const double time) const
+void Animation::scale_at(Vector3* scale, const double time) const
 {
-    assert(scale_completion_);
-    scale_completion_->complete(scale, time);
+    assert(scale_completions_);
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (scale_completions_[i])
+        {
+            double* completed = &(scale->x);
+            scale_completions_[i]->complete(&(completed[i]), time);
+        }
+    }
 }
 
 void Animation::angle_at(Vector3* angle, const double time) const

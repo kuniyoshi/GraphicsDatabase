@@ -278,4 +278,20 @@ void Matrix44::scale(double a)
     c3_ = a * c3_;
 }
 
+void Matrix44::scale(const Vector3& scale)
+{
+    a0_ = scale.x * a0_;
+    a1_ = scale.x * a1_;
+    a2_ = scale.x * a2_;
+    a3_ = scale.x * a3_;
+    b0_ = scale.y * b0_;
+    b1_ = scale.y * b1_;
+    b2_ = scale.y * b2_;
+    b3_ = scale.y * b3_;
+    c0_ = scale.z * c0_;
+    c1_ = scale.z * c1_;
+    c2_ = scale.z * c2_;
+    c3_ = scale.z * c3_;
+}
+
 } // namespace GraphicsDatabase

@@ -70,7 +70,8 @@ void Node::setup_model(const NodeTemplate& node_template)
         does_model_in_database_ = false;
     }
 
-    model_->scale(node_template.scale());
+    const double* scale = node_template.scale();
+    model_->scale(Vector3(scale[0], scale[1], scale[2]));
     const double* angle = node_template.angle();
     model_->angle(Vector3(angle[0], angle[1], angle[2]));
     const double* position = node_template.position();
@@ -136,13 +137,12 @@ void Node::draw_flat_shading(   const Matrix44& perspective_matrix,
 
 void Node::update(const double time, const Animation& animation)
 {
-    double scale = 1.0;
     Vector3 value;
 
-    if (animation.has_scale_completion())
+    if (animation.has_scale_completions())
     {
-        animation.scale_at(&scale, time);
-        model_->scale(scale);
+        animation.scale_at(&value, time);
+        model_->scale(value);
     }
 
     if (animation.has_angle_completions())

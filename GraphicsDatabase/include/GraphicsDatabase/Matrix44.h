@@ -30,6 +30,7 @@ public:
     void rotate_zx(double angle_zx);
     void rotate_xy(double angle_xy);
     void scale(double a);
+    void scale(const Vector3& scale);
     void translate(const Vector3& delta);
 };
 

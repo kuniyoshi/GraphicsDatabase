@@ -33,7 +33,9 @@ void append_children(   NodeTemplate* parent,
 
     if (data.does_exist(key + ".scale"))
     {
-        parent->scale(data.get_double_at(key + ".scale"));
+        std::vector< double > scale;
+        data.copy_to_vector_at(&scale, key + ".scale");
+        parent->scale(scale);
     }
 
     if (data.does_exist(key + ".angle"))
