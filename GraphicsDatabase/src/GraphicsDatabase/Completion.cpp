@@ -26,6 +26,10 @@ TheCompletion::Method get_method_from_id(const std::string& id)
     {
         return TheCompletion::MethodPolynomial2;
     }
+    else if (id == "polynomial3")
+    {
+        return TheCompletion::MethodPolynomial3;
+    }
 
     assert(!"Unknown method id found.");
 }
@@ -37,6 +41,7 @@ size_t get_chunk_size(const TheCompletion::Method method)
         case TheCompletion::MethodLastOne: return 1; break;
         case TheCompletion::MethodLinear: return 1; break;
         case TheCompletion::MethodPolynomial2: return 3; break;
+        case TheCompletion::MethodPolynomial3: return 4; break;
         default: assert(!"Unknown method found."); break;
     }
 
@@ -165,6 +170,63 @@ void Completion::transform_polynomial2(const double t, const double speed)
         a_data[1] = p0;
         a_data[2] = b;
         a_data[3] = 0.0;
+    }
+
+    delete[] t_and_data_;
+    t_and_data_ = new_data;
+    new_data = 0;
+}
+
+// p = a + b t + c t^2 + d t^3
+void Completion::transform_polynomial3()
+{
+    assert(t_and_data_);
+    assert((total_size_ % 3) == 0);
+    assert(size_per_t_ == 4);
+
+    size_t t_size = total_size_ / 3;
+    assert(t_size > 1);
+    size_t chunk_size = 1 + size_per_t_;
+    total_size_ = chunk_size * t_size;
+    double* new_data = new double[total_size_];
+
+    for (size_t i = 0; i < t_size - 1; ++i)
+    {
+        const double t0 = t_and_data_[3 * i];
+        const double t1 = t_and_data_[3 * (i + 1)];
+        const double p0 = t_and_data_[3 * i + 1];
+        const double p1 = t_and_data_[3 * (i + 1) + 1];
+        const double v0 = t_and_data_[3 * i + 2];
+        const double v1 = t_and_data_[3 * (i + 1) + 2];
+        const double a = p0;
+        const double b = v0;
+        const double c = -3.0 * (p0 - p1) - 2 * v0 - v1;
+        const double d = 2.0 * (p0 - p1) + (v0 + v1);
+        double* a_data = &(new_data[chunk_size * i]);
+        a_data[0] = t0;
+        a_data[1] = a;
+        a_data[2] = b;
+        a_data[3] = c;
+        a_data[4] = d;
+    }
+
+    {
+        const double t0 = t_and_data_[3 * (t_size - 2)];
+        const double t1 = t_and_data_[3 * (t_size - 1)];
+        const double p0 = t_and_data_[3 * (t_size - 2) + 1];
+        const double p1 = t_and_data_[3 * (t_size - 1) + 1];
+        const double v0 = t_and_data_[3 * (t_size - 2) + 2];
+        const double v1 = t_and_data_[3 * (t_size - 1) + 2];
+        const double a = p0;
+        const double b = v0;
+        const double c = -3.0 * (p0 - p1) - 2 * v0 - v1;
+        const double d = 2.0 * (p0 - p1) + (v0 + v1);
+        double* a_data = &(new_data[chunk_size * (t_size - 1)]);
+        a_data[0] = t0;
+        a_data[1] = a;
+        a_data[2] = b;
+        a_data[3] = c;
+        a_data[4] = d;
     }
 
     delete[] t_and_data_;

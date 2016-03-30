@@ -41,6 +41,7 @@ public:
     void scale_at(double* scale, const double time) const;
     void angle_at(Vector3* angle, const double time) const;
     void position_at(Vector3* position, const double time) const;
+    void transform_angle_polynomial3(const char axis);
 };
 
 } // namespace GraphicsDatabase

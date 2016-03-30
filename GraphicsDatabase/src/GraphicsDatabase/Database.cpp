@@ -198,6 +198,11 @@ Database::Database(const char* filename)
                                                                 speed_at[0],
                                                                 speed_at[1]);
                         }
+
+                        if (completion_id == "polynomial3")
+                        {
+                            animation->transform_angle_polynomial3(axises[i]);
+                        }
                     }
                 }
             }

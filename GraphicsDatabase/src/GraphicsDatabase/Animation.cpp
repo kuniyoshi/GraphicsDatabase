@@ -94,8 +94,6 @@ void Animation::angle_completions(  const std::string& completion_id,
                                     const std::vector< double >& angles,
                                     const double period)
 {
-    assert((angles.size() % 2) == 0);
-
     if (!angle_completions_)
     {
         angle_completions_ = new Completion*[3];
@@ -189,6 +187,14 @@ void Animation::position_at(Vector3* position, const double time) const
             position_completions_[i]->complete(&(completed[i]), time);
         }
     }
+}
+
+void Animation::transform_angle_polynomial3(const char axis)
+{
+    assert(angle_completions_);
+    int index = index_of(axis);
+    assert(angle_completions_[index]);
+    angle_completions_[index]->transform_polynomial3();
 }
 
 } // namespace GraphicsDatabase

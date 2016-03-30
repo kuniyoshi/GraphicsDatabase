@@ -25,6 +25,7 @@ public:
     ~Completion();
     void complete(double* completed, const double t) const;
     void transform_polynomial2(const double t, const double speed);
+    void transform_polynomial3();
 };
 
 } // namespace GraphicsDatabase
