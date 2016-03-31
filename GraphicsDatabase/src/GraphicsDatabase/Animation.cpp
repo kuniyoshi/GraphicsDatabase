@@ -141,8 +141,6 @@ void Animation::position_completions(   const std::string& completion_id,
                                         const std::vector< double >& positions,
                                         const double period)
 {
-    assert((positions.size() % 2) == 0);
-
     if (!position_completions_)
     {
         position_completions_ = new Completion*[3];
