@@ -39,10 +39,14 @@ public:
     void apply_speed_to_angle(  const char axis,
                                 const double t,
                                 const double speed);
+    void apply_speed_to_position(   const char axis,
+                                    const double t,
+                                    const double speed);
     void scale_at(Vector3* scale, const double time) const;
     void angle_at(Vector3* angle, const double time) const;
     void position_at(Vector3* position, const double time) const;
     void transform_angle_polynomial3(const char axis);
+    void transform_position_polynomial3(const char axis);
 };
 
 } // namespace GraphicsDatabase

@@ -211,7 +211,43 @@ Database::Database(const char* filename)
 
             if (data.does_exist(base_key + ".position"))
             {
-                // todo
+                const std::string key = base_key + ".position";
+                const char axises[3] = { 'x', 'y', 'z' };
+
+                for (int i = 0; i < 3; ++i)
+                {
+                    const std::string axis_key = key + "." + axises[i];
+
+                    if (data.does_exist(axis_key))
+                    {
+                        const std::string method_key = axis_key + ".completion";
+                        const std::string period_key = axis_key + ".period";
+                        const std::string points_key = axis_key + ".points";
+                        const std::string completion_id = data.get_at(method_key);
+                        const double period = data.get_double_at(period_key);
+                        std::vector< double > axis;
+                        data.copy_expanded_to_vector_at(&axis, points_key);
+                        animation->position_completions(    completion_id,
+                                                            axises[i],
+                                                            axis,
+                                                            period);
+
+                        if (completion_id == "polynomial2")
+                        {
+                            const std::string s0_key = axis_key + ".speed_at";
+                            std::vector< double > speed_at;
+                            data.copy_to_vector_at(&speed_at, s0_key);
+                            animation->apply_speed_to_position( axises[i],
+                                                                speed_at[0],
+                                                                speed_at[1]);
+                        }
+
+                        if (completion_id == "polynomial3")
+                        {
+                            animation->transform_position_polynomial3(axises[i]);
+                        }
+                    }
+                }
             }
 
             if (data.does_exist(base_key + ".scale"))

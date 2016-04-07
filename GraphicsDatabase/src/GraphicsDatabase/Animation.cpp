@@ -173,6 +173,16 @@ void Animation::apply_speed_to_angle(   const char axis,
     angle_completions_[index]->transform_polynomial2(t, speed);
 }
 
+void Animation::apply_speed_to_position(    const char axis,
+                                            const double t,
+                                            const double speed)
+{
+    assert(position_completions_);
+    int index = index_of(axis);
+    assert(position_completions_[index]);
+    position_completions_[index]->transform_polynomial2(t, speed);
+}
+
 void Animation::scale_at(Vector3* scale, const double time) const
 {
     assert(scale_completions_);
@@ -221,6 +231,14 @@ void Animation::transform_angle_polynomial3(const char axis)
     int index = index_of(axis);
     assert(angle_completions_[index]);
     angle_completions_[index]->transform_polynomial3();
+}
+
+void Animation::transform_position_polynomial3(const char axis)
+{
+    assert(position_completions_);
+    int index = index_of(axis);
+    assert(position_completions_[index]);
+    position_completions_[index]->transform_polynomial3();
 }
 
 } // namespace GraphicsDatabase
