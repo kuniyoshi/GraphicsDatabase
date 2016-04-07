@@ -13,6 +13,7 @@ namespace GraphicsDatabase
 class Animation;
 class Database;
 class Matrix44;
+class Model;
 class Node;
 class TreeTemplate;
 class Vector3;
@@ -30,9 +31,14 @@ private:
 public:
     Tree(Database* database, const TreeTemplate* tree_template);
     ~Tree();
-    double time_rate() const;
     void time_rate(double new_value);
+    double time_rate() const;
+    const Model* root() const;
 
+    void angle(const Vector3& new_value);
+    const Vector3* angle() const;
+    void balance(const Vector3& new_value);
+    const Vector3* balance() const;
     void draw(  const Matrix44& perspective_matrix,
                 const Vector3& brightness,
                 double ambient_brightness,

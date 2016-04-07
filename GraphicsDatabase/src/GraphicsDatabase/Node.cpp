@@ -46,6 +46,8 @@ const std::string* Node::id() const { return &id_; }
 
 Model* Node::model() { return model_; }
 
+const Model* Node::model() const { return model_; }
+
 void Node::model(Model* new_value) { model_ = new_value; }
 
 size_t Node::children_size() const { return children_size_; }
@@ -60,6 +62,18 @@ void Node::set_child(Node* child, int index)
 {
     assert(index >= 0 && static_cast< unsigned >(index) <= children_size_);
     children_[index] = child;
+}
+
+Node* Node::get_child(int index)
+{
+    assert(index >= 0 && static_cast< unsigned >(index) <= children_size_);
+    return children_[index];
+}
+
+const Node* Node::get_child(int index) const
+{
+    assert(index >= 0 && static_cast< unsigned >(index) <= children_size_);
+    return children_[index];
 }
 
 void Node::setup_model(const NodeTemplate& node_template)

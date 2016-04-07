@@ -6,6 +6,7 @@
 #include "GraphicsDatabase/Animation.h"
 #include "GraphicsDatabase/Database.h"
 #include "GraphicsDatabase/Node.h"
+#include "GraphicsDatabase/Model.h"
 #include "GraphicsDatabase/NodeTemplate.h"
 #include "GraphicsDatabase/TreeTemplate.h"
 
@@ -91,6 +92,47 @@ Tree::~Tree()
 {
     delete root_;
     root_ = 0;
+}
+
+void Tree::time_rate(double new_value) { time_rate_ = new_value; }
+
+double Tree::time_rate() const { return time_rate_; }
+
+namespace
+{
+
+const Model* get_const_balance_model(const Node& root)
+{
+    return root.model();
+}
+
+Model* get_balance_model(Node* root)
+{
+    return root->model();
+}
+
+} // namespace -
+
+const Model* Tree::root() const { return get_const_balance_model(*root_); }
+
+void Tree::angle(const Vector3& new_value)
+{
+    get_balance_model(root_)->angle(new_value);
+}
+
+const Vector3* Tree::angle() const
+{
+    return get_const_balance_model(*root_)->angle();
+}
+
+void Tree::balance(const Vector3& new_value)
+{
+    get_balance_model(root_)->position(new_value);
+}
+
+const Vector3* Tree::balance() const
+{
+    return get_const_balance_model(*root_)->position();
 }
 
 void Tree::draw(    const Matrix44& perspective_matrix,

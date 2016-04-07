@@ -25,10 +25,13 @@ public:
     ~Node();
     const std::string* id() const;
     Model* model();
+    const Model* model() const;
     void model(Model* new_value);
     size_t children_size() const;
     void children_size(int new_value);
     void set_child(Node* child, int index);
+    Node* get_child(int index);
+    const Node* get_child(int index) const;
     void setup_model(const NodeTemplate& note_template);
     void reserve_children();
 
